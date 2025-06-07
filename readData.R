@@ -2,31 +2,41 @@ library(dataRetrieval)
 library(dplyr)
 library(stringr)
 library(ggplot2)
+library(lubridate)
 
-sites_wa <- whatNWISsites(stateCd = "WA")
+sites <- whatNWISsites(stateCd = "CO", )
 
-yakima_sites <- sites_wa %>% filter(grepl("yakima", sites_wa$station_nm, ignore.case = TRUE))
+river_sites <- sites %>% filter(grepl("frying", sites$station_nm, ignore.case = TRUE))
 
-siteNo <- "12484500"
+siteNo <- "09080400"
 pCode <- "00060"
-start.date <- "2025-05-30"
-end.date <- "2025-06-05"
+start.date <- Sys.Date() - days(3)
+end.date <- Sys.Date() + days(3)
+sCode <- "00003"
 
-yakima <- readNWISuv(
+river <- readNWISuv(
   siteNumbers = siteNo,
   parameterCd = pCode,
   startDate = start.date,
   endDate = end.date
 )
 
-yakima <- renameNWISColumns(yakima)
-names(attributes(yakima))
+river_stat <- readNWISdv(
+  siteNumbers = siteNo,
+  parameterCd = pCode,
+  startDate = start.date,
+  endDate = end.date,
+  statCd = sCode
+)
 
-variableInfo <- attr(yakima, "variableInfo")
-siteInfo <- attr(yakima, "siteInfo")
+river <- renameNWISColumns(river)
+names(attributes(river))
+
+variableInfo <- attr(river, "variableInfo")
+siteInfo <- attr(river, "siteInfo")
 
 discharge_plot <- ggplot(
-  data = yakima,
+  data = river,
   aes(dateTime, Flow_Inst)
 ) + 
 geom_line(color = "blue") + 
