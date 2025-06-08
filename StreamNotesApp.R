@@ -16,6 +16,10 @@ library(chatLLM)
 ## Set API key
 Sys.setenv(GH_MODELS_TOKEN = "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")
 
+## Source required scripts
+path <- paste0(getwd(), "/R")
+sapply(list.files(path, pattern = "\\.R$", full.names = TRUE), source)
+
 ui <- fluidPage(
   waiter::use_waiter(),
   titlePanel("StreamNotes"),
