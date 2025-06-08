@@ -48,19 +48,24 @@ dischargePlot <- function(site_no) {
     data = site,
     aes(dateTime, Flow_Inst)
   ) + 
-    geom_line(color = "blue") + 
+    geom_line(aes(color = "Flow")) + 
     geom_point(data = site_stat,
-               aes(x = Date, y = Flow),
-               color = "red",
+               aes(x = Date, y = Flow, color = "Mean daily value"),
+               # color = "red",
                shape = 17,
                size = 3
+    ) +
+    scale_color_manual(
+      name = "Legend",
+      values = c("Flow" = "blue", "Mean daily value" = "red")
     ) +
     labs(
       x = "Date",
       y = variableInfo$variableDescription,
       title = siteInfo$station_nm
     ) + 
-    theme_minimal()
+    theme_minimal() + 
+    theme(axis.title = element_text(size = 14))
   
   ## Return plot
   discharge_plot

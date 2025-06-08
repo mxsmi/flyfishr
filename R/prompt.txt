@@ -1,0 +1,7 @@
+Generate a fly-fishing report for {river} for today based on today's weather 
+conditions, water flows for today's date, and the time of year it is now. 
+Include recommendations for specific flies and techniques. 
+
+Here are some requirements:
+Use the current discharge levels from USGS if they are available.
+
