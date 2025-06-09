@@ -12,6 +12,7 @@ library(dplyr)
 library(stringr)
 library(markdown)
 library(chatLLM)
+library(leaflet)
 
 ## Set API key
 Sys.setenv(GH_MODELS_TOKEN = "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")
@@ -21,23 +22,58 @@ path <- paste0(getwd(), "/R")
 sapply(list.files(path, pattern = "\\.R$", full.names = TRUE), source)
 
 ui <- fluidPage(
+  
   waiter::use_waiter(),
   titlePanel("StreamNotes"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("state", "Choose a State", choices = stateCd$STUSAB),
-      textInput("riverinput", "Enter name of a river", placeholder = "Ex: Yellowstone"),
-      ## Action button to load data for the selected state and river
-      actionButton("findSites", "Search for water data"),
-      selectizeInput("site", "Choose a USGS monitoring site", choices = NULL, 
-                     options = list(placeholder = "Or search by name")),
-      actionButton("generateReport", "Generate fishing report")
+  
+  fluidRow(
+    column(1),
+    column(3,
+      selectInput("state", "Choose a State", choices = stateCd$STUSAB)     
     ),
-    mainPanel(
-      plotOutput("discharge"),
-      uiOutput("fishingReport")
+    column(1),
+    column(3, 
+      textInput("riverinput", "Enter river name to search by", 
+                placeholder = "Ex: Yellowstone"),
+    ),
+    column(1),
+    column(3,
+      br(), ## Create a line break
+      ## Action button to load data for the selected state and river
+      actionButton("findSites", "Search for water data"), 
+    ),
+  ),
+  
+  fluidRow(
+    column(1),
+    column(11, 
+      selectizeInput("site", 
+                     "Choose a USGS monitoring site from search results", 
+                     choices = NULL),
     )
-  )
+  ),
+  
+  fluidRow(
+    tabsetPanel(
+      tabPanel("Map",
+        leafletOutput("siteMap")
+      ),
+      tabPanel("Fly Fishing Report",
+        column(1),
+        column(10,
+          br(),
+          actionButton("generateReport", "Generate fishing report"),
+          br(),
+          br(),
+          uiOutput("fishingReport")
+        ),
+        column(1)
+      ),
+      tabPanel("Charts",
+        plotOutput("discharge")
+      )
+    )
+  )  
 )
 
 server <- function(input, output, session) {
@@ -45,12 +81,14 @@ server <- function(input, output, session) {
   ## Set reactive values
   state_data <- reactiveVal()
   fishing_report <- reactiveVal()
+  siteNo <- reactiveVal()
   
   ## Clear the fishing report when the state is changed
   observeEvent(input$state, {
     fishing_report("")
   })
   
+  ## Clear the fishing report when the site is changed
   observeEvent(input$site, {
     fishing_report("")
   })
@@ -103,6 +141,13 @@ server <- function(input, output, session) {
     response <- as.character(fishing_report())
     html_content <- markdownToHTML(text = response, fragment.only = TRUE)
     HTML(html_content)
+  })
+  
+  ## Output map of chosen site
+  output$siteMap <- renderLeaflet({
+    req(input$site)
+    site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+    createSiteMap(site_no)
   })
   
 }
