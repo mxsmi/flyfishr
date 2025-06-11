@@ -12,7 +12,7 @@ sites_filtered <- sites %>%
          str_detect(tolower(station_nm), "yakima")
   )
 
-siteNo <- "12510500"
+siteNo <- "12484500"
 pCode <- "00060"
 start.date <- Sys.Date() - days(3)
 end.date <- Sys.Date() + days(3)
@@ -33,7 +33,26 @@ river_stat <- readNWISdv(
   statCd = sCode
 )
 
+## water temp data
+sites <- whatNWISdata(stateCd = "WA", # Change to your state
+                      parameterCd = "00010", # Water temperature
+                      service = "uv")
+
 site_info <- readNWISsite(siteNumbers = siteNo)
+
+t <- readNWISuv(
+  siteNumbers = "12505050",
+  parameterCd = "00010",
+  startDate = Sys.Date() - days(1),
+  endDate = Sys.Date()
+)
+
+willamette_temp <- readNWISuv(
+  siteNumbers = "14211720",
+  parameterCd = "00010",
+  startDate = Sys.Date() - days(3),
+  endDate = Sys.Date()
+)
 
 # Extract coordinates
 lat <- site_info$dec_lat_va
