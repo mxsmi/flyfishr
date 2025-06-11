@@ -1,0 +1,6 @@
+This text file includes a list of paratmeters to be passed into the 
+fishingReportPrompt function. They should be passed as a character vector.
+
+date = <today's date>
+flow = <todays discharge in cfs>
+temp = <today's water temperature>

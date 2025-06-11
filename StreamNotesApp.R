@@ -70,7 +70,8 @@ ui <- fluidPage(
         column(1)
       ),
       tabPanel("Charts",
-        plotOutput("discharge")
+        plotOutput("discharge"),
+        plotOutput("waterTemp")
       )
     )
   )  
@@ -81,7 +82,21 @@ server <- function(input, output, session) {
   ## Set reactive values
   state_data <- reactiveVal()
   fishing_report <- reactiveVal()
-  siteNo <- reactiveVal()
+  siteNo <- reactive({
+    req(state_data())
+    req(input$site)
+    site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+  })
+  water_temp <- reactive({
+    req(input$site)
+    req(siteNo())
+    temp_data <- readNWISuv(
+      siteNumbers = siteNo(),
+      parameterCd = "00010",  # Water temp in °F (use 00010 for °C)
+      startDate = Sys.Date() - days(3),
+      endDate = Sys.Date()
+    )
+  })
   
   ## Clear the fishing report when the state is changed
   observeEvent(input$state, {
@@ -117,8 +132,15 @@ server <- function(input, output, session) {
   ## Output discharge plot
   output$discharge <- renderPlot({
     req(input$site)
-    site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+    # site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+    site_no <- siteNo()
     dischargePlot(site_no)
+  })
+  
+  ## Output water temp plot
+  output$waterTemp <- renderPlot({
+    site_no <- siteNo()
+    waterTempPlot(site_no)
   })
   
   ## Generate fishing report when button is pressed
@@ -126,6 +148,12 @@ server <- function(input, output, session) {
     req(input$site)
     waiter <- waiter::Waiter$new(id = "generateReport")$show() ## use loading spinner
     on.exit(waiter$hide()) ## close loading spinner when done
+    currentWaterTemp <- readNWISdv(
+      siteNumbers = siteNo(),
+      parameterCd = "00010",
+      startDate = Sys.Date(),
+      endDate = Sys.Date()
+    )
     prompt <- fishingReportPrompt(input$site)
     report <- 
     fishing_report(call_llm(
@@ -146,7 +174,8 @@ server <- function(input, output, session) {
   ## Output map of chosen site
   output$siteMap <- renderLeaflet({
     req(input$site)
-    site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+    # site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+    site_no = siteNo()
     createSiteMap(site_no)
   })
   
