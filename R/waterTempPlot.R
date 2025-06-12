@@ -5,7 +5,7 @@ waterTempPlot <- function(site_no) {
   ## Parameters for readNWISuv (the function that gets the data for a specific site)
   siteNo <- site_no
   pCode <- "00010"
-  start.date <- Sys.Date() - days(3)
+  start.date <- Sys.Date() - days(5)
   end.date <- Sys.Date()
   sCode <- "00003"
   
@@ -44,7 +44,6 @@ waterTempPlot <- function(site_no) {
   )
   
   ## Convert from Celsius to Fahrenheit
-  site$Wtemp_Inst <- (site$Wtemp_Inst * 9/5) + 32
   site_stat$Wtemp_Inst <- (site_stat$Wtemp * 9/5) + 32
   
   ## Build plot

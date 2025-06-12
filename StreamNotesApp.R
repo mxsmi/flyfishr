@@ -93,7 +93,7 @@ server <- function(input, output, session) {
     temp_data <- readNWISuv(
       siteNumbers = siteNo(),
       parameterCd = "00010",  # Water temp in °F (use 00010 for °C)
-      startDate = Sys.Date() - days(3),
+      startDate = Sys.Date() - days(5),
       endDate = Sys.Date()
     )
   })
@@ -132,7 +132,6 @@ server <- function(input, output, session) {
   ## Output discharge plot
   output$discharge <- renderPlot({
     req(input$site)
-    # site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
     site_no <- siteNo()
     dischargePlot(site_no)
   })
@@ -174,7 +173,6 @@ server <- function(input, output, session) {
   ## Output map of chosen site
   output$siteMap <- renderLeaflet({
     req(input$site)
-    # site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
     site_no = siteNo()
     createSiteMap(site_no)
   })
