@@ -87,6 +87,18 @@ server <- function(input, output, session) {
     req(input$site)
     site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
   })
+  discharge <- reactive({
+    req(input$site)
+    req(siteNo())
+    temp_data <- readNWISuv(
+      siteNumbers = siteNo(),
+      parameterCd = "00060",  # Water temp in °F (use 00010 for °C)
+      startDate = Sys.Date() - days(5),
+      endDate = Sys.Date()
+    ) %>%
+      renameNWISColumns() %>%
+      arrange(desc(dateTime))
+  })
   water_temp <- reactive({
     req(input$site)
     req(siteNo())
@@ -95,7 +107,18 @@ server <- function(input, output, session) {
       parameterCd = "00010",  # Water temp in °F (use 00010 for °C)
       startDate = Sys.Date() - days(5),
       endDate = Sys.Date()
-    )
+    ) %>%
+      renameNWISColumns() %>%
+      mutate(
+        Wtemp_Inst = (Wtemp_Inst * 9/5) + 32
+      ) %>%
+      arrange(desc(dateTime))
+  })
+  current_temp <- reactive({
+    water_temp()$Wtemp_Inst[1]
+  })
+  current_discharge <- reactive({
+    discharge()$Flow_Inst[1]
   })
   
   ## Clear the fishing report when the state is changed
@@ -147,13 +170,12 @@ server <- function(input, output, session) {
     req(input$site)
     waiter <- waiter::Waiter$new(id = "generateReport")$show() ## use loading spinner
     on.exit(waiter$hide()) ## close loading spinner when done
-    currentWaterTemp <- readNWISdv(
-      siteNumbers = siteNo(),
-      parameterCd = "00010",
-      startDate = Sys.Date(),
-      endDate = Sys.Date()
-    )
-    prompt <- fishingReportPrompt(input$site)
+    print(current_temp())
+    print(current_discharge())
+    print(discharge())
+    prompt <- fishingReportPrompt(site = input$site, 
+                                  temp = current_temp(), 
+                                  flow = current_discharge())
     report <- 
     fishing_report(call_llm(
                     prompt = prompt, 
