@@ -1,14 +1,12 @@
-Generate a detailed fishing report for {site} on {date}.
+Generate a fishing report for {site} on {date}.
 
 Current conditions:
 - Water flow: {flow} cubic feet per second
-- Water temperature: {temp}°F
+- Water temperature: {temp}°F. If {temp} is "Not available", try to find the current
+water temperature in Fahrenheit from the internet.
 
 Please analyze these conditions and provide fishing recommendations including:
-- Best fishing techniques for these conditions
-- Recommended baits and lures
-- Expected fish activity levels
-- Safety considerations
+- Recommended flies and techniques
 
 Report:
 

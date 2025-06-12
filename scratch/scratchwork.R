@@ -50,7 +50,7 @@ t <- readNWISuv(
 willamette_temp <- readNWISuv(
   siteNumbers = "14211720",
   parameterCd = "00010",
-  startDate = Sys.Date() - days(3),
+  startDate = Sys.Date() - days(5),
   endDate = Sys.Date()
 )
 

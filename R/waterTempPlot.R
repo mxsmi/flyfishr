@@ -44,8 +44,8 @@ waterTempPlot <- function(site_no) {
   )
   
   ## Convert from Celsius to Fahrenheit
-  site_stat$Wtemp_Inst <- (site_stat$Wtemp * 9/5) + 32
-  
+  site_stat$Wtemp <- (site_stat$Wtemp * 9/5) + 32
+  site$Wtemp_Inst <- (site$Wtemp_Inst * 9/5) + 32
   ## Build plot
   water_temp_plot <- ggplot(
     data = site,

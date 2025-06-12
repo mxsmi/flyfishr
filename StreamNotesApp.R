@@ -80,13 +80,22 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   ## Set reactive values
+  
+  ## Data for all the sites in a state
   state_data <- reactiveVal()
+  
+  ## Contains AI generated fishing report text
   fishing_report <- reactiveVal()
+  
+  ## Contains currently selected site number
   siteNo <- reactive({
     req(state_data())
     req(input$site)
     site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+    return(site_no)
   })
+  
+  ## Contains discharge (cfs) data for currently selected site
   discharge <- reactive({
     req(input$site)
     req(siteNo())
@@ -98,7 +107,10 @@ server <- function(input, output, session) {
     ) %>%
       renameNWISColumns() %>%
       arrange(desc(dateTime))
+    return(temp_data)
   })
+  
+  ## Contains water temperature data (F) for currently selected site
   water_temp <- reactive({
     req(input$site)
     req(siteNo())
@@ -108,17 +120,30 @@ server <- function(input, output, session) {
       startDate = Sys.Date() - days(5),
       endDate = Sys.Date()
     ) %>%
-      renameNWISColumns() %>%
-      mutate(
-        Wtemp_Inst = (Wtemp_Inst * 9/5) + 32
-      ) %>%
-      arrange(desc(dateTime))
+      renameNWISColumns()
+      if ("Wtemp_Inst" %in% names(temp_data)) {
+        temp_data <- temp_data %>% mutate(
+          Wtemp_Inst = (Wtemp_Inst * 9/5) + 32
+        ) %>%
+          arrange(desc(dateTime))
+      }      
+    return(temp_data)
   })
+  
+  ## Contains most current water temp (F) reading for currently selected site
   current_temp <- reactive({
-    water_temp()$Wtemp_Inst[1]
+    req(water_temp())
+    if ("Wtemp_Inst" %in% names(water_temp())) {
+      return(water_temp()$Wtemp_Inst[1])
+    } else {
+      return("Not available")
+    }
   })
+  
+  ## Contains most current discharge (cfs) reading for currently selected site
   current_discharge <- reactive({
-    discharge()$Flow_Inst[1]
+    req(discharge)
+    return(discharge()$Flow_Inst[1])
   })
   
   ## Clear the fishing report when the state is changed
@@ -131,13 +156,12 @@ server <- function(input, output, session) {
     fishing_report("")
   })
   
-  ## Load data for the currently selected state
+  ## Load data for the currently selected state and search term
   observeEvent(input$findSites, {
     req(input$state)
     req(input$riverinput)
     waiter <- waiter::Waiter$new(id = "findSites")$show() ## use loading spinner
     on.exit(waiter$hide()) ## close loading spinner when done
-    ## (Add) process state data to only include ST/SP that have Flow_Inst data available
     data <- whatNWISsites(stateCd = input$state) ## load data for selected state
     data <- data %>% ## keep only streams and springs that match riverinput
       filter(nchar(site_no) == 8,
@@ -170,9 +194,6 @@ server <- function(input, output, session) {
     req(input$site)
     waiter <- waiter::Waiter$new(id = "generateReport")$show() ## use loading spinner
     on.exit(waiter$hide()) ## close loading spinner when done
-    print(current_temp())
-    print(current_discharge())
-    print(discharge())
     prompt <- fishingReportPrompt(site = input$site, 
                                   temp = current_temp(), 
                                   flow = current_discharge())
@@ -182,6 +203,7 @@ server <- function(input, output, session) {
                     provider = "github", 
                     model = "openai/gpt-4.1")
                    )
+    print(report)
   })
   
   ## Output fishing report
