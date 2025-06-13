@@ -79,16 +79,18 @@ streamNotesApp <- function(...) {
     ## Set reactive values
 
     ## Data for all the sites in a state
-    state_data <- reactiveVal()
+    sites <- reactiveVal()
 
     ## Contains AI generated fishing report text
     fishing_report_text <- reactiveVal()
 
     ## Contains currently selected site number
     siteNo <- reactive({
-      req(state_data())
+      req(sites())
       req(input$site)
-      site_no <- state_data()$site_no[which(state_data()$station_nm == input$site)]
+      site_no <- sites() %>%
+        filter(station_nm == input$site) %>%
+        pull(site_no)
       return(site_no)
     })
 
@@ -159,16 +161,10 @@ streamNotesApp <- function(...) {
       req(input$riverinput)
       waiter <- waiter::Waiter$new(id = "findSites")$show() ## use loading spinner
       on.exit(waiter$hide()) ## close loading spinner when done
-      data <- whatNWISsites(stateCd = input$state) ## load data for selected state
-      data <- data %>% ## keep only streams and springs that match riverinput
-        filter(nchar(site_no) == 8,
-               site_tp_cd == "ST" | site_tp_cd == "SP",
-               str_detect(tolower(station_nm), tolower(input$riverinput)),
-        )
-      state_data(data) ## update reactive value
-      sites <- dischargeDataAvailable(data) ## get sites that have discharge data
+      sites_df <- dischargeDataAvailable(state = input$state, site = input$riverinput) ## get sites that have discharge data
+      sites(sites_df)
       updateSelectizeInput(session, inputId = "site",
-                           choices = sort(sites),
+                           choices = sort(sites_df$station_nm),
                            selected = "",
                            server = TRUE)
     })
