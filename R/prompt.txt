@@ -1,7 +1,12 @@
-Generate a fly-fishing report for {river} for today based on today's weather 
-conditions, water flows for today's date, and the time of year it is now. 
-Include recommendations for specific flies and techniques. 
+Generate a fishing report for {site} on {date}.
 
-Here are some requirements:
-Use the current discharge levels from USGS if they are available.
+Current conditions:
+- Water flow: {flow} cubic feet per second
+- Water temperature: {temp}°F. If {temp} is "Not available", try to find the current
+water temperature in Fahrenheit from the internet.
+
+Please analyze these conditions and provide fishing recommendations including:
+- Recommended flies and techniques
+
+Report:
 
