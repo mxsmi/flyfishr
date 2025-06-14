@@ -1,14 +1,14 @@
-### Function to generate the water temperature (F) plot
+### Function to create the discharge plot in StreamNotes app
 
-waterTempPlot <- function(site_no) {
- 
+plotDischarge <- function(site_no) {
+
   ## Parameters for readNWISuv (the function that gets the data for a specific site)
   siteNo <- site_no
-  pCode <- "00010"
+  pCode <- "00060"
   start.date <- Sys.Date() - days(5)
   end.date <- Sys.Date()
   sCode <- "00003"
-  
+
   ## Get site data
   site <- readNWISuv(
     siteNumbers = siteNo,
@@ -16,7 +16,7 @@ waterTempPlot <- function(site_no) {
     startDate = start.date,
     endDate = end.date
   )
-  
+
   ## Get mean daily value for site
   site_stat <- readNWISdv(
     siteNumbers = siteNo,
@@ -25,52 +25,49 @@ waterTempPlot <- function(site_no) {
     endDate = end.date,
     statCd = sCode
   )
-   
+
   ## dataRetreival's built in clean names function
   site <- renameNWISColumns(site)
   site_stat <- renameNWISColumns(site_stat)
   ## Convert Date column to DateTime for mean daily value data
   site_stat$Date <- as_datetime(site_stat$Date)
-  
+
   ## Store variable info and site info attributes to label the plot with
   variableInfo <- attr(site, "variableInfo")
   siteInfo <- attr(site, "siteInfo")
-  
+
   ## Build the plot of water discharge
   # Validate data first
   validate(
-    need(nrow(site) > 0, "No water temp data available for this river"),
-    need("Wtemp_Inst" %in% names(site), "Temp data not found"),
+    need(nrow(site) > 0, "No discharge data available for this river"),
+    need("Flow_Inst" %in% names(site), "Flow data not found"),
   )
-  
-  ## Convert from Celsius to Fahrenheit
-  site_stat$Wtemp <- (site_stat$Wtemp * 9/5) + 32
-  site$Wtemp_Inst <- (site$Wtemp_Inst * 9/5) + 32
+
   ## Build plot
-  water_temp_plot <- ggplot(
+  discharge_plot <- ggplot(
     data = site,
-    aes(dateTime, Wtemp_Inst)
-  ) + 
-    geom_line(aes(color = "Temp")) + 
+    aes(dateTime, Flow_Inst)
+  ) +
+    geom_line(aes(color = "Flow")) +
     geom_point(data = site_stat,
-               aes(x = Date, y = Wtemp, color = "Mean daily value"),
+               aes(x = Date, y = Flow, color = "Mean daily value"),
                # color = "red",
-               shape = 15,
+               shape = 17,
                size = 3
     ) +
     scale_color_manual(
       name = "Legend",
-      values = c("Temp" = "forestgreen", "Mean daily value" = "magenta")
+      values = c("Flow" = "blue", "Mean daily value" = "red")
     ) +
     labs(
       x = "Date",
-      y = str_replace(variableInfo$variableDescription, "Celsius", "Fahrenheit"),
+      y = variableInfo$variableDescription,
       title = siteInfo$station_nm
-    ) + 
-    theme_minimal() + 
+    ) +
+    theme_minimal() +
     theme(axis.title = element_text(size = 14))
-  
+
   ## Return plot
-  water_temp_plot
-  
+  discharge_plot
+
 }
