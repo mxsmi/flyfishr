@@ -25,7 +25,7 @@ fishingReportServer <- function(id, selected_site, water_data) {
     # Generate report
     observeEvent(input$generateReport, {
       req(selected_site())
-      waiter <- waiter::Waiter$new(id = "generateReport")$show()
+      waiter <- waiter::Waiter$new(NS(id, "generateReport"))$show()
       on.exit(waiter$hide())
 
       prompt <- fishingReportPrompt(

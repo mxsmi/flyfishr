@@ -1,4 +1,5 @@
 inputControlsUI <- function(id) {
+
   tagList(
     fluidRow(
       column(1),
@@ -18,18 +19,20 @@ inputControlsUI <- function(id) {
     ),
     fluidRow(
       column(1),
-      column(11,
+      column(3,
              selectizeInput(NS(id, "site"),
                             "Choose a USGS monitoring site from search results",
                             choices = NULL),
       )
-    )
+    ),
+    textOutput(NS(id, "noResultsMessage"))
   )
 }
 
 inputControlsServer <- function(id) {
   moduleServer(id, function(input, output, session) {
     sites <- reactiveVal()
+    show_no_results <- reactiveVal(FALSE)
 
     observeEvent(input$findSites, {
       req(input$state)
@@ -37,11 +40,26 @@ inputControlsServer <- function(id) {
       waiter <- waiter::Waiter$new(id = "findSites")$show()
       on.exit(waiter$hide())
       sites_df <- dischargeDataAvailable(state = input$state, site = input$riverinput)
-      sites(sites_df)
-      updateSelectizeInput(session, inputId = "site",
-                           choices = sort(sites_df$station_nm),
-                           selected = "",
-                           server = TRUE)
+      if (is.null(sites_df)) {
+        show_no_results(TRUE)
+        sites(NULL)
+        updateSelectizeInput(session, inputId = "site", choices = NULL)
+      } else {
+        show_no_results(FALSE)
+        sites(sites_df)
+        updateSelectizeInput(session, inputId = "site",
+                             choices = sort(sites_df$station_nm),
+                             selected = "",
+                             server = TRUE)
+      }
+    })
+
+    output$noResultsMessage <- renderText({
+      if (show_no_results()) {
+        "No discharge results found for this state and search term"
+      } else {
+        ""
+      }
     })
 
     # Return reactive values for parent app
@@ -52,3 +70,4 @@ inputControlsServer <- function(id) {
     ))
   })
 }
+

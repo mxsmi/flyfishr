@@ -25,12 +25,12 @@ streamNotesApp <- function(...) {
 
     inputControlsUI("controls"),
 
-    fluidRow(
+    # fluidRow(
       tabsetPanel(
         tabPanel("Map", mapUI("map")),
         tabPanel("Fly Fishing Report", fishingReportUI("report")),
         tabPanel("Charts", chartsUI("charts"))
-      )
+     # )
     )
   )
 
