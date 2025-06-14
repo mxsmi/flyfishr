@@ -6,9 +6,9 @@ library(dataRetrieval)
 
 dischargeDataAvailable <- function(state, site) {
 
-  validate(
-    need(state %in% stateCd$STUSAB, "Invalid state selection")
-  )
+  # validate(
+  #   need(state %in% stateCd$STUSAB, "Invalid state selection")
+  # )
 
   data <- whatNWISsites(stateCd = state) ## load data for selected state
   data <- data %>% ## keep only streams and springs that match riverinput
@@ -16,6 +16,11 @@ dischargeDataAvailable <- function(state, site) {
            site_tp_cd == "ST" | site_tp_cd == "SP",
            str_detect(tolower(station_nm), tolower(site)),
     )
+
+  if (!nrow(data) > 0) {
+    return(NULL)
+  }
+
   ## Returns a list of dataframes with the results of whatNWISdata
   ## (service = uv - "unit"/instantaneous values) for each site.
   sites_with_dis <- lapply(unique(data$site_no),
