@@ -37,7 +37,7 @@ inputControlsServer <- function(id) {
     observeEvent(input$findSites, {
       req(input$state)
       req(input$riverinput)
-      waiter <- waiter::Waiter$new(id = "findSites")$show()
+      waiter <- waiter::Waiter$new(NS(id, "findSites"))$show()
       on.exit(waiter$hide())
       sites_df <- dischargeDataAvailable(state = input$state, site = input$riverinput)
       if (is.null(sites_df)) {
