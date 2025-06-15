@@ -17,22 +17,22 @@ library(leaflet)
 ## Set API key
 Sys.setenv(GH_MODELS_TOKEN = "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")
 
-streamNotesApp <- function(...) {
-  ui <- fluidPage(
+flyfishrApp <- function(...) {
+  ui <- function(request) {
+    fluidPage(
 
-    waiter::use_waiter(),
-    titlePanel("Field Notes"),
+      waiter::use_waiter(),
+      titlePanel("Field Notes"),
 
-    inputControlsUI("controls"),
+      inputControlsUI("controls"),
 
-    # fluidRow(
       tabsetPanel(
         tabPanel("Map", mapUI("map")),
         tabPanel("Fly Fishing Report", fishingReportUI("report")),
         tabPanel("Charts", chartsUI("charts"))
-     # )
+      )
     )
-  )
+  }
 
   server <- function(input, output, session) {
 
@@ -43,7 +43,16 @@ streamNotesApp <- function(...) {
     chartsServer("charts", water_data)
     mapServer("map", water_data)
     fishingReportServer("report", search_data$selected_site, water_data)
+
+    # Automatically bookmark every time an input changes
+    observe({
+      reactiveValuesToList(input)
+      session$doBookmark()
+    })
+    # Update the query string
+    onBookmarked(updateQueryString)
   }
-  shinyApp(ui, server)
+
+  shinyApp(ui, server, enableBookmarking = "url")
 }
 
