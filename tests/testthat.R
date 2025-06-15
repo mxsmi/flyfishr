@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(StreamNotes)
+library(flyfishr)
 
-test_check("StreamNotes")
+test_check("flyfishr")
