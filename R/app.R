@@ -2,6 +2,8 @@
 ### levels for any body of water in the country and get an AI generated fishing
 ### report.
 
+devtools::load_all()
+
 ## Load required libraries
 library(shiny)
 library(dataRetrieval)
