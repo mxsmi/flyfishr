@@ -56,3 +56,4 @@ flyfishrApp <- function(...) {
   shinyApp(ui, server, enableBookmarking = "url")
 }
 
+flyfishrApp()
