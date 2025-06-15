@@ -2,8 +2,6 @@
 ### levels for any body of water in the country and get an AI generated fishing
 ### report.
 
-devtools::load_all()
-
 ## Load required libraries
 library(shiny)
 library(dataRetrieval)
@@ -15,6 +13,9 @@ library(stringr)
 library(markdown)
 library(chatLLM)
 library(leaflet)
+library(devtools)
+
+devtools::load_all()
 
 ## Set API key
 Sys.setenv(GH_MODELS_TOKEN = "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")
