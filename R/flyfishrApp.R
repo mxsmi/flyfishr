@@ -16,7 +16,7 @@ library(leaflet)
 library(devtools)
 
 ## Set API key
-Sys.setenv(GH_MODELS_TOKEN = "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")
+Sys.setenv(GH_MODELS_TOKEN = "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")
 
 flyfishrApp <- function(...) {
   ui <- function(request) {
@@ -57,3 +57,4 @@ flyfishrApp <- function(...) {
   shinyApp(ui, server, enableBookmarking = "url")
 }
 
+flyfishrApp()

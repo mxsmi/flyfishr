@@ -37,7 +37,7 @@ fishingReportServer <- function(id, selected_site, water_data) {
       llm_response <- call_llm(
         prompt = prompt,
         provider = "github",
-        model = "openai/gpt-4.1"
+        model = "openai/gpt-4o"
       )
 
       fishing_report_text(llm_response)
