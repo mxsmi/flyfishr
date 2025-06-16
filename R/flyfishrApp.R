@@ -15,8 +15,6 @@ library(chatLLM)
 library(leaflet)
 library(devtools)
 
-devtools::load_all()
-
 ## Set API key
 Sys.setenv(GH_MODELS_TOKEN = "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")
 
@@ -59,4 +57,3 @@ flyfishrApp <- function(...) {
   shinyApp(ui, server, enableBookmarking = "url")
 }
 
-flyfishrApp()
