@@ -16,7 +16,9 @@ library(leaflet)
 library(devtools)
 
 ## Set API key
-Sys.setenv(GH_MODELS_TOKEN = "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")
+if (file.exists("github_models_api_key.env")) {
+  readRenviron("github_models_api_key.env")
+}
 
 flyfishrApp <- function(...) {
   ui <- function(request) {
