@@ -36,6 +36,11 @@ fishingReportServer <- function(id, selected_site, water_data) {
         flow = water_data$current_discharge()
       )
 
+      if (Sys.getenv("GH_MODELS_TOKEN") == "") {
+        showNotification("API key not found!", type = "error")
+        return()
+      }
+
       llm_response <- call_llm(
         prompt = prompt,
         provider = "github",
