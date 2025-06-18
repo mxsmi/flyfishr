@@ -25,6 +25,7 @@ inputControlsUI <- function(id) {
                             choices = NULL),
       )
     ),
+    HTML("<strong>Data sources:</strong> USGS data obtained using the 'dataRetrieval' R package"),
     textOutput(NS(id, "noResultsMessage"))
   )
 }

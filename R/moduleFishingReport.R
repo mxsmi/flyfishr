@@ -3,12 +3,14 @@ fishingReportUI <- function(id) {
     column(1),
     column(10,
            br(),
-           actionButton(NS(id, "generateReport"), "Generate fishing report"),
+           actionButton(NS(id, "generateReport"), "Generate AI fishing report"),
+           br(),
+           "(Uses github openai model: openai/gpt-4o)",
            br(),
            br(),
            uiOutput(NS(id, "fishingReport"))
     ),
-    column(1)
+    column(1),
   )
 }
 
