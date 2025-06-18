@@ -15,8 +15,8 @@ library(chatLLM)
 library(leaflet)
 
 ## Set API key
-if (file.exists("github_models_api_key.env")) {
-  readRenviron("github_models_api_key.env")
+if (file.exists(".env")) {
+  readRenviron(".env")
 }
 
 flyfishrApp <- function(...) {
