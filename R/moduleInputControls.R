@@ -23,10 +23,9 @@ inputControlsUI <- function(id) {
              selectizeInput(NS(id, "site"),
                             "Choose a USGS monitoring site from search results",
                             choices = NULL),
-      ),
+      )
     ),
-    textOutput(NS(id, "noResultsMessage")),
-    HTML("<strong>Data sources:</strong> USGS data obtained using the 'dataRetrieval' R package")
+    textOutput(NS(id, "noResultsMessage"))
   )
 }
 
