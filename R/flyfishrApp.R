@@ -17,6 +17,8 @@ library(leaflet)
 ## Set API key
 if (file.exists(".env")) {
   readRenviron(".env")
+} else {
+  Sys.setenv("GH_MODELS_TOKEN")
 }
 
 flyfishrApp <- function(...) {
