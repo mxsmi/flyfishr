@@ -1,3 +1,5 @@
+readRenviron(".Renviron")
+
 fishingReportUI <- function(id) {
   tagList(
     column(1),
