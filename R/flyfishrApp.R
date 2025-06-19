@@ -14,7 +14,7 @@ library(markdown)
 library(chatLLM)
 library(leaflet)
 
-## Set API key
+# ## Set API key
 if (file.exists(".Renviron")) {
   readRenviron(".Renviron")
 }
