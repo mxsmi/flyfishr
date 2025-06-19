@@ -3842,7 +3842,7 @@
       "checksum": "ff8b6b44995338180e4e5b2f7a196465"
     },
     "app.R": {
-      "checksum": "0ee1d7720908d040727fe0b0cc5d46db"
+      "checksum": "8f36172869564cb4f66d4d71aa16212a"
     },
     "DESCRIPTION": {
       "checksum": "1ba20d836086ae78eb144005e627cab4"
@@ -3863,7 +3863,7 @@
       "checksum": "b7db056c32c23e7733f6eecc5d715c65"
     },
     "R/moduleFishingReport.R": {
-      "checksum": "316068c56fd5cee0d09ad670c2a725da"
+      "checksum": "0f823239075d0cfae4a6fd2bc72043d7"
     },
     "R/moduleInputControls.R": {
       "checksum": "827273b3c442b1d93bbb7aa7e557f308"
