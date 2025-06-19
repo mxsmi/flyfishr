@@ -13,6 +13,7 @@ library(stringr)
 library(markdown)
 library(chatLLM)
 library(leaflet)
+library(jsonlite)
 
 # ## Set API key
 # if (file.exists(".Renviron")) {
