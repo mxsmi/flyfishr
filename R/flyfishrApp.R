@@ -20,7 +20,7 @@ library(jsonlite)
 #   readRenviron(".Renviron")
 # }
 
-flyfishrApp <- function(apikey, ...) {
+flyfishrApp <- function(...) {
   ui <- function(request) {
     fluidPage(
 
@@ -37,12 +37,7 @@ flyfishrApp <- function(apikey, ...) {
     )
   }
 
-  server <- function(apikey, input, output, session) {
-
-
-    if (apikey == "") {
-      showNotification("API key not found", type = "error")
-    }
+  server <- function(input, output, session) {
 
     search_data <- inputControlsServer("controls")
     water_data <- waterDataServer(id = "data",
