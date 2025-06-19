@@ -3839,7 +3839,7 @@
       "checksum": "ecb1f6047d538124f06862b8e7dbfca5"
     },
     ".Renviron": {
-      "checksum": "f368c7a410f86fa74439969263402726"
+      "checksum": "1bdbcbf9b0403698b916317463bc0c8f"
     },
     "app.R": {
       "checksum": "5e361e80e44d9359dce2b2021246f420"
@@ -3854,7 +3854,7 @@
       "checksum": "9dcd11bc33663aa240f702cf75aa47ad"
     },
     "R/flyfishrApp.R": {
-      "checksum": "725ca64360c8fcf8ab2a344c74a24e6e"
+      "checksum": "0d13c4ffa74779e82e52df5e7305ada2"
     },
     "R/leafletSiteMap.R": {
       "checksum": "c0d72c5f06dab4823792acd743c10ef5"
@@ -3863,7 +3863,7 @@
       "checksum": "b7db056c32c23e7733f6eecc5d715c65"
     },
     "R/moduleFishingReport.R": {
-      "checksum": "33572b6ec07fb01421adc8d6e86b61f7"
+      "checksum": "f67e13d922993a46ab29369b8f6ea7e8"
     },
     "R/moduleInputControls.R": {
       "checksum": "827273b3c442b1d93bbb7aa7e557f308"
