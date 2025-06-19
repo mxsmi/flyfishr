@@ -3,7 +3,7 @@
 library(devtools)
 
 # devtools::load_all()
-GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
+apikey = Sys.getenv("GH_MODELS_TOKEN")
 
 # More concise one-liner
 sapply(list.files("R", pattern = "\\.R$", full.names = TRUE), source)
