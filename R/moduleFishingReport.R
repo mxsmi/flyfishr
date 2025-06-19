@@ -1,6 +1,6 @@
 # readRenviron(".Renviron")
 
-GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
+# GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
 
 fishingReportUI <- function(id) {
   tagList(
@@ -18,7 +18,7 @@ fishingReportUI <- function(id) {
   )
 }
 
-fishingReportServer <- function(id, selected_site, water_data) {
+fishingReportServer <- function(id, apikey, selected_site, water_data) {
   moduleServer(id, function(input, output, session) {
 
     fishing_report_text <- reactiveVal()
@@ -49,7 +49,7 @@ fishingReportServer <- function(id, selected_site, water_data) {
         prompt = prompt,
         provider = "github",
         model = "openai/gpt-4o",
-        api_key = GH_MODELS_TOKEN
+        api_key = apikey
       )
 
       fishing_report_text(llm_response)

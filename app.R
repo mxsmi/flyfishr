@@ -2,6 +2,8 @@
 
 library(devtools)
 
+GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
+
 devtools::load_all()
-flyfishrApp()
+flyfishrApp(GH_MODELS_TOKEN)
 
