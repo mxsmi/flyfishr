@@ -42,6 +42,7 @@ fishingReportServer <- function(id, selected_site, water_data) {
         prompt = prompt,
         provider = "github",
         model = "openai/gpt-4o",
+        api_key = GH_MODELS_TOKEN
       )
 
       fishing_report_text(llm_response)
