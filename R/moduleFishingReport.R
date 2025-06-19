@@ -37,8 +37,8 @@ fishingReportServer <- function(id, selected_site, water_data) {
         flow = water_data$current_discharge()
       )
 
-      token = Sys.getenv("GH_MODELS_TOKEN")
-      if (token == "") {
+      GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
+      if (GH_MODELS_TOKEN == "") {
         showNotification("API key not found", type = "error")
       }
 
@@ -46,7 +46,7 @@ fishingReportServer <- function(id, selected_site, water_data) {
         prompt = prompt,
         provider = "github",
         model = "openai/gpt-4o",
-        api_key = token
+        api_key = GH_MODELS_TOKEN
       )
 
       fishing_report_text(llm_response)
