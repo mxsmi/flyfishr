@@ -1,6 +1,6 @@
 # readRenviron(".Renviron")
 
-# GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
+GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
 
 fishingReportUI <- function(id) {
   tagList(
@@ -40,10 +40,9 @@ fishingReportServer <- function(id, apikey, selected_site, water_data) {
         flow = water_data$current_discharge()
       )
 
-      # token <- Sys.getenv("GH_MODELS_TOKEN")
-      # if (token == "") {
-      #   showNotification("API key not found", type = "error")
-      # }
+      if (GH_MODELS_TOKEN == "") {
+        showNotification("API key not found", type = "error")
+      }
 
       llm_response <- call_llm(
         prompt = prompt,
