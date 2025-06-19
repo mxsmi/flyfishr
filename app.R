@@ -2,7 +2,7 @@
 
 library(devtools)
 
-GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
+# GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
 
 # devtools::load_all()
 # More concise one-liner
