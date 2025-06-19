@@ -37,7 +37,12 @@ flyfishrApp <- function(apikey, ...) {
     )
   }
 
-  server <- function(input, output, session) {
+  server <- function(apikey, input, output, session) {
+
+
+    if (apikey == "") {
+      showNotification("API key not found", type = "error")
+    }
 
     search_data <- inputControlsServer("controls")
     water_data <- waterDataServer(id = "data",
