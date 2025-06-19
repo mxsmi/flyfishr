@@ -3832,23 +3832,20 @@
     }
   },
   "files": {
-    ".gitattributes": {
-      "checksum": "05bdb783ee6514c8c072e47680af8ff7"
-    },
     ".Rapp.history": {
       "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     ".Rbuildignore": {
-      "checksum": "7ba91ea90ab587eece60f0e44767132c"
+      "checksum": "ecb1f6047d538124f06862b8e7dbfca5"
+    },
+    ".Renviron": {
+      "checksum": "f368c7a410f86fa74439969263402726"
     },
     "app.R": {
       "checksum": "eb105020f5287070377503812f891f6c"
     },
     "DESCRIPTION": {
       "checksum": "1ba20d836086ae78eb144005e627cab4"
-    },
-    "github_models_api_key.env": {
-      "checksum": "9348dbb0b9fd685577fa069ce95cba48"
     },
     "R/dischargeDataAvailable.R": {
       "checksum": "d8dab9edc0213596760e0dbfdc379a25"
@@ -3857,7 +3854,7 @@
       "checksum": "9dcd11bc33663aa240f702cf75aa47ad"
     },
     "R/flyfishrApp.R": {
-      "checksum": "63769a96aecda109bf644f771212b9c7"
+      "checksum": "7080117c1136336fcf7567b267777a96"
     },
     "R/leafletSiteMap.R": {
       "checksum": "c0d72c5f06dab4823792acd743c10ef5"
@@ -3866,10 +3863,10 @@
       "checksum": "b7db056c32c23e7733f6eecc5d715c65"
     },
     "R/moduleFishingReport.R": {
-      "checksum": "b7e2146ecbb0404d7e506a31828be811"
+      "checksum": "6cee1f93d6ad416bbe49bdc541b523fc"
     },
     "R/moduleInputControls.R": {
-      "checksum": "3acccae04e99a9119a5082b6b8ddcaf9"
+      "checksum": "827273b3c442b1d93bbb7aa7e557f308"
     },
     "R/moduleMaps.R": {
       "checksum": "bfaecf785282209a8610638bd9ac96de"
