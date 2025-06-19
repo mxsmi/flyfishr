@@ -1,4 +1,4 @@
-readRenviron(".Renviron")
+# readRenviron(".Renviron")
 
 # OPENAI_API_KEY = Sys.getenv("OPENAI_API_KEY")
 # GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
