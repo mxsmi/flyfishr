@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^app\.R$
+^manifest\.json$
+^rsconnect/
+^\.Renviron$
+^deploy/
