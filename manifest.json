@@ -3854,7 +3854,7 @@
       "checksum": "9dcd11bc33663aa240f702cf75aa47ad"
     },
     "R/flyfishrApp.R": {
-      "checksum": "725ca64360c8fcf8ab2a344c74a24e6e"
+      "checksum": "d396a529f552ad15ee5d05c11d1e465b"
     },
     "R/leafletSiteMap.R": {
       "checksum": "c0d72c5f06dab4823792acd743c10ef5"
@@ -3863,7 +3863,7 @@
       "checksum": "b7db056c32c23e7733f6eecc5d715c65"
     },
     "R/moduleFishingReport.R": {
-      "checksum": "547a30281ad175a951e240146f98ebe9"
+      "checksum": "73dd76fdf4278306ba86f8d885125dcf"
     },
     "R/moduleInputControls.R": {
       "checksum": "827273b3c442b1d93bbb7aa7e557f308"

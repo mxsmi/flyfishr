@@ -19,6 +19,8 @@ if (file.exists(".Renviron")) {
   readRenviron(".Renviron")
 }
 
+GH_MODELS_TOKEN <- Sys.getenv("GH_MODELS_TOKEN")
+
 flyfishrApp <- function(...) {
   ui <- function(request) {
     fluidPage(

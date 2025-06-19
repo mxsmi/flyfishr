@@ -1,3 +1,5 @@
+GH_MODELS_TOKEN <- Sys.getenv("GH_MODELS_TOKEN")
+
 fishingReportUI <- function(id) {
   tagList(
     column(1),
