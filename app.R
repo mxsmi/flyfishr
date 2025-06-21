@@ -2,16 +2,6 @@
 
 library(devtools)
 
-# devtools::load_all()
-# apikey = Sys.getenv("GH_MODELS_TOKEN")
-#
-# cat("API key found:", apikey != "", "\n")
-# cat("API key length:", nchar(apikey), "\n")
-# cat("All environment variables containing 'GH':\n")
-
-# More concise one-liner
-# sapply(list.files("R", pattern = "\\.R$", full.names = TRUE), source)
-
 ui <- function(request) {
   fluidPage(
 

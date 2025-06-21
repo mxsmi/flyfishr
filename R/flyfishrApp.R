@@ -15,11 +15,6 @@ library(chatLLM)
 library(leaflet)
 library(jsonlite)
 
-# ## Set API key
-# if (file.exists(".Renviron")) {
-#   readRenviron(".Renviron")
-# }
-
 flyfishrApp <- function(...) {
   ui <- function(request) {
     fluidPage(
