@@ -36,7 +36,7 @@ server <- function(input, output, session) {
                                 selected_site = search_data$selected_site)
   chartsServer("charts", water_data)
   mapServer("map", water_data)
-  fishingReportServer("report", apikey, search_data$selected_site, water_data)
+  fishingReportServer("report", search_data$selected_site, water_data)
 
   # Automatically bookmark every time an input changes
   observe({

@@ -17,7 +17,7 @@ fishingReportUI <- function(id) {
   )
 }
 
-fishingReportServer <- function(id, apikey, selected_site, water_data) {
+fishingReportServer <- function(id, selected_site, water_data) {
   moduleServer(id, function(input, output, session) {
 
     fishing_report_text <- reactiveVal()
