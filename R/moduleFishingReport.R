@@ -1,4 +1,6 @@
 
+GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
+
 fishingReportUI <- function(id) {
   tagList(
     column(1),
@@ -44,8 +46,7 @@ fishingReportServer <- function(id, apikey, selected_site, water_data) {
       llm_response <- call_llm(
         prompt = prompt,
         provider = "github",
-        model = "openai/gpt-4o",
-        api_key = apikey
+        model = "openai/gpt-4o"
       )
 
       fishing_report_text(llm_response)
