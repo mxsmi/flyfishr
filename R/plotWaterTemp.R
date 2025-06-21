@@ -38,9 +38,9 @@ plotWaterTemp <- function(site_no) {
 
   ## Build the plot of water discharge
   # Validate data first
-  validate(
+  shiny::validate(
     need(nrow(site) > 0, "No water temp data available for this river"),
-    need("Wtemp_Inst" %in% names(site), "Temp data not found"),
+    need("Wtemp_Inst" %in% names(site), "Temp data not found")
   )
 
   ## Convert from Celsius to Fahrenheit

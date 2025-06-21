@@ -38,9 +38,9 @@ plotDischarge <- function(site_no) {
 
   ## Build the plot of water discharge
   # Validate data first
-  validate(
+  shiny::validate(
     need(nrow(site) > 0, "No discharge data available for this river"),
-    need("Flow_Inst" %in% names(site), "Flow data not found"),
+    need("Flow_Inst" %in% names(site), "Flow data not found")
   )
 
   ## Build plot
