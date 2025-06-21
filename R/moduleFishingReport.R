@@ -39,10 +39,6 @@ fishingReportServer <- function(id, selected_site, water_data) {
         flow = water_data$current_discharge()
       )
 
-      if (apikey == "") {
-        showNotification("API key not found", type = "error")
-      }
-
       llm_response <- call_llm(
         prompt = prompt,
         provider = "github",
