@@ -15,6 +15,8 @@ library(chatLLM)
 library(leaflet)
 library(jsonlite)
 
+devtools::load_all()
+
 ## Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
   ui <- function(request) {
