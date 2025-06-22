@@ -7,22 +7,14 @@ inputControlsUI <- function(id) {
              selectInput(NS(id, "state"), "Choose a State", choices = stateCd$STUSAB)
       ),
       column(1),
-      column(3,
-             textInput(NS(id, "riverinput"), "Enter river name to search by",
-                       placeholder = "Ex: Yellowstone"),
-      ),
       column(1),
-      column(3,
-             br(),
-             actionButton(NS(id, "findSites"), "Search for water data"),
-      ),
     ),
     fluidRow(
       column(1),
       column(3,
              selectizeInput(NS(id, "site"),
-                            "Choose a USGS monitoring site from search results",
-                            choices = NULL),
+                            "Choose a USGS monitoring site for selected state",
+                            choices = ""),
       )
     ),
     HTML("<strong>Data sources:</strong> USGS data obtained using the 'dataRetrieval' R package"),
@@ -35,12 +27,14 @@ inputControlsServer <- function(id) {
     sites <- reactiveVal()
     show_no_results <- reactiveVal(FALSE)
 
-    observeEvent(input$findSites, {
+    observeEvent(input$state, {
       req(input$state)
-      req(input$riverinput)
-      waiter <- waiter::Waiter$new(NS(id, "findSites"))$show()
-      on.exit(waiter$hide())
-      sites_df <- dischargeDataAvailable(state = input$state, site = input$riverinput)
+      showNotification(ui = "Fetching USGS sites with discharge data. This may take a few minutes.",
+                       duration = NULL,
+                       id = "loadingData",
+                       type = "message"
+      )
+      sites_df <- dischargeDataAvailable(state = input$state)
       if (is.null(sites_df)) {
         show_no_results(TRUE)
         sites(NULL)
@@ -53,6 +47,7 @@ inputControlsServer <- function(id) {
                              selected = "",
                              server = TRUE)
       }
+      removeNotification(id = "loadingData")
     })
 
     output$noResultsMessage <- renderText({

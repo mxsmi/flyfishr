@@ -6,11 +6,22 @@ library(lubridate)
 
 sites <- whatNWISsites(stateCd = "WA")
 
-sites_filtered <- sites %>% 
+sites_filtered <- sites %>%
   filter(nchar(site_no) == 8,
-         site_tp_cd == "ST" | site_tp_cd == "SP", ## keep only streams and springs
-         str_detect(tolower(station_nm), "yakima")
+         site_tp_cd == "ST" | site_tp_cd == "SP" ## keep only streams and springs
+         # str_detect(tolower(station_nm), "yakima")
   )
+
+d <- whatNWISdata(
+  stateCd = "WA",
+  service = "uv",
+  parameterCd = "00060"
+)
+
+d <- lapply(unique(data$site_no),
+       function(s) {
+         whatNWISdata(siteNumber = s, service = "uv", parameterCd = "00060")
+       })
 
 siteNo <- "12484500"
 pCode <- "00060"
@@ -76,13 +87,13 @@ siteInfo <- attr(river, "siteInfo")
 discharge_plot <- ggplot(
   data = river,
   aes(dateTime, Flow_Inst)
-) + 
-geom_line(color = "blue") + 
+) +
+geom_line(color = "blue") +
   labs(
     x = "Date",
     y = variableInfo$variableDescription,
     title = siteInfo$station_nm
-  ) + 
+  ) +
   theme_minimal()
 
 discharge_plot
