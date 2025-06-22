@@ -1,4 +1,4 @@
-### Function to generate the water temperature (F) plot
+### Function to generate the water temperature (F) graph
 
 plotWaterTemp <- function(site_no) {
 
@@ -29,6 +29,7 @@ plotWaterTemp <- function(site_no) {
   ## dataRetreival's built in clean names function
   site <- renameNWISColumns(site)
   site_stat <- renameNWISColumns(site_stat)
+
   ## Convert Date column to DateTime for mean daily value data
   site_stat$Date <- as_datetime(site_stat$Date)
 
@@ -46,6 +47,7 @@ plotWaterTemp <- function(site_no) {
   ## Convert from Celsius to Fahrenheit
   site_stat$Wtemp <- (site_stat$Wtemp * 9/5) + 32
   site$Wtemp_Inst <- (site$Wtemp_Inst * 9/5) + 32
+
   ## Build plot
   water_temp_plot <- ggplot(
     data = site,
@@ -54,7 +56,6 @@ plotWaterTemp <- function(site_no) {
     geom_line(aes(color = "Temp")) +
     geom_point(data = site_stat,
                aes(x = Date, y = Wtemp, color = "Mean daily value"),
-               # color = "red",
                shape = 15,
                size = 3
     ) +

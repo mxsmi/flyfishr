@@ -1,4 +1,7 @@
+### Module that defines UI and associated server function for generating and
+### displaying the AI fly-fishing report.
 
+## Retrieve GH_MODELS_TOKEN API key from environment variables
 GH_MODELS_TOKEN = Sys.getenv("GH_MODELS_TOKEN")
 
 fishingReportUI <- function(id) {
@@ -20,35 +23,42 @@ fishingReportUI <- function(id) {
 fishingReportServer <- function(id, selected_site, water_data) {
   moduleServer(id, function(input, output, session) {
 
+    ## Reactive value for storing the text of the fly-fishing report
     fishing_report_text <- reactiveVal()
 
-    # Clear report when site changes
+    ## Clear report when site changes
     observeEvent(selected_site(), {
       fishing_report_text("")
     })
 
-    # Generate report
+    ## Generate report
     observeEvent(input$generateReport, {
       req(selected_site())
+
+      ## Show waiting spinner while the AI model is generating the report
       waiter <- waiter::Waiter$new(NS(id, "generateReport"))$show()
       on.exit(waiter$hide())
 
+      ## Get the prompt for currently selected site, water temperature, and
+      ## discharge levels
       prompt <- fishingReportPrompt(
         site = selected_site(),
         temp = water_data$current_temp(),
         flow = water_data$current_discharge()
       )
 
+      ## Get the response from the AI model
       llm_response <- call_llm(
         prompt = prompt,
         provider = "github",
         model = "openai/gpt-4o"
       )
 
+      ## Update reactive value with response text
       fishing_report_text(llm_response)
     })
 
-    # Render report
+    ## Render report
     output$fishingReport <- renderUI({
       req(!is.null(fishing_report_text()))
       response <- as.character(fishing_report_text())
