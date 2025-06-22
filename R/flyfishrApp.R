@@ -14,6 +14,7 @@ library(markdown)
 library(chatLLM)
 library(leaflet)
 library(jsonlite)
+library(devtools)
 
 devtools::load_all()
 

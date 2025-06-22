@@ -6,7 +6,8 @@ This repository contains code and associated files for the flyfishr R package.
 To install the package into your R environment, run these commands:
 
 1) `install.packages("devtools")`
-2) `library(flyfishr)`
+2) `devtools::install_github("mxsmi/flyfishr")`
+3) `library(flyfishr)`
 
 ## flyfishr app
 
@@ -23,7 +24,7 @@ fly-fishing. Here is the information currently available on the app:
 - Map: shows a map of the area surrounding the selected USGS monitoring site
 - Flows & Temperature: shows graphs of current discharge levels and water temperature 
 for the currently selected site. As well as mean daily values for both
-- Fly-fishing Report: An AI fly-fishing report for the selected site based on current
+- Fly-fishing Report: An AI generated fly-fishing report for the selected site based on current
 water levels, water temperatures, and weather conditions
 
 Future plans for the app include to add the following:

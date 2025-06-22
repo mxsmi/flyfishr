@@ -1,7 +1,5 @@
 ## Shiny app primary document
 
-library(devtools)
-
 ui <- function(request) {
   fluidPage(
 
