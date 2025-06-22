@@ -14,9 +14,10 @@ library(markdown)
 library(chatLLM)
 library(leaflet)
 library(jsonlite)
-library(devtools)
 
-devtools::load_all()
+# Source all .R files in the R directory
+r_files <- list.files("R", pattern = "\\.R$", full.names = TRUE)
+sapply(r_files, source)
 
 ## Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
