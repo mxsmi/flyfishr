@@ -3838,47 +3838,50 @@
     ".Rbuildignore": {
       "checksum": "3f9a153e71e4b9b0d28b34466a108dc2"
     },
+    ".rcsignore": {
+      "checksum": "74c4e1ed9ae64d7fca35c8004fb7e3b8"
+    },
     ".Renviron": {
       "checksum": "cc2423d00e33999aa6295edc04cb7b64"
     },
     "app.R": {
-      "checksum": "0714c3349180291892a70db55c544509"
+      "checksum": "90081998179da1e89dbde90e537f35f6"
     },
     "DESCRIPTION": {
       "checksum": "1ba20d836086ae78eb144005e627cab4"
     },
+    "R/createSiteMap.R": {
+      "checksum": "4576c96851e4826b944de13f43d3341a"
+    },
     "R/dischargeDataAvailable.R": {
-      "checksum": "d8dab9edc0213596760e0dbfdc379a25"
+      "checksum": "c4d9d384e2a0df713fea945d72882b41"
     },
     "R/fishingReportPrompt.R": {
-      "checksum": "9dcd11bc33663aa240f702cf75aa47ad"
+      "checksum": "d866a62f9dc8dea549f7df199ef29940"
     },
     "R/flyfishrApp.R": {
-      "checksum": "a3564603ab97c4038ff3d0b025d4136e"
-    },
-    "R/leafletSiteMap.R": {
-      "checksum": "c0d72c5f06dab4823792acd743c10ef5"
+      "checksum": "63cb39021c2c0515d68155c2aac48f98"
     },
     "R/moduleCharts.R": {
-      "checksum": "b7db056c32c23e7733f6eecc5d715c65"
+      "checksum": "5416f345da67be57bb97320f49874a01"
     },
     "R/moduleFishingReport.R": {
-      "checksum": "0f823239075d0cfae4a6fd2bc72043d7"
+      "checksum": "61652dd18f5fa52d3c18911848523de7"
     },
     "R/moduleInputControls.R": {
-      "checksum": "827273b3c442b1d93bbb7aa7e557f308"
+      "checksum": "024db75ec4abb5c1fd64b8b30422d43c"
     },
     "R/moduleMaps.R": {
-      "checksum": "bfaecf785282209a8610638bd9ac96de"
+      "checksum": "cb4499ff8f39281e79d0d8d38efbe7b7"
     },
     "R/moduleWaterData.R": {
-      "checksum": "78030cb9fc5595f7344000218f6fa692"
+      "checksum": "dfda0b6e8828c0a99dd148762c46f1f2"
     },
     "R/plotDischarge.R": {
-      "checksum": "c46213c0f26431bca98cacdc9795f605"
+      "checksum": "0dc8e48cd4e6c4f699e733594cbbffd5"
     },
     "R/plotWaterTemp.R": {
-      "checksum": "4ab4d85a7be1c485e06c3607e66a460c"
+      "checksum": "893c49dfc42db8b8e8c8dc37417dcc82"
     },
     "R/prompt.txt": {
       "checksum": "a3c33158d242341134ac73c2769b6fc7"
@@ -3886,8 +3889,14 @@
     "R/promptParameters.txt": {
       "checksum": "c716b12fbe6b2bfd303144d1e0be18f6"
     },
+    "R/zzz.R": {
+      "checksum": "96558e11d3374e877037b3b325b6f288"
+    },
+    "README.md": {
+      "checksum": "f4220961ded5960e540b0567eab99074"
+    },
     "scratch/scratchwork.R": {
-      "checksum": "59d52f3ff2dd381fdc8522d53ce80961"
+      "checksum": "e91e561b3ca6622f7f5b2e7e0ff7364a"
     },
     "tests/testthat.R": {
       "checksum": "e4d2a25d927e0cd689e14fccece48812"

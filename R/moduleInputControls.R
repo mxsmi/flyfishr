@@ -1,3 +1,6 @@
+### Module that defines the UI input controls and the server functions associated
+### with them.
+
 inputControlsUI <- function(id) {
 
   tagList(
@@ -7,22 +10,14 @@ inputControlsUI <- function(id) {
              selectInput(NS(id, "state"), "Choose a State", choices = stateCd$STUSAB)
       ),
       column(1),
-      column(3,
-             textInput(NS(id, "riverinput"), "Enter river name to search by",
-                       placeholder = "Ex: Yellowstone"),
-      ),
       column(1),
-      column(3,
-             br(),
-             actionButton(NS(id, "findSites"), "Search for water data"),
-      ),
     ),
     fluidRow(
       column(1),
       column(3,
              selectizeInput(NS(id, "site"),
-                            "Choose a USGS monitoring site from search results",
-                            choices = NULL),
+                            "Choose a USGS monitoring site for selected state",
+                            choices = ""),
       )
     ),
     HTML("<strong>Data sources:</strong> USGS data obtained using the 'dataRetrieval' R package"),
@@ -32,15 +27,24 @@ inputControlsUI <- function(id) {
 
 inputControlsServer <- function(id) {
   moduleServer(id, function(input, output, session) {
+
+    ## Reactive value which stores the sites with discharge data for selected state
     sites <- reactiveVal()
+    ## Reactive value which is TRUE if 'sites' is mpty or FALSE if it is non-empty
     show_no_results <- reactiveVal(FALSE)
 
-    observeEvent(input$findSites, {
+    ## Whenever state input changes, load sites with discharge data and update
+    ## the 'site' drop-down menu
+    observeEvent(input$state, {
       req(input$state)
-      req(input$riverinput)
-      waiter <- waiter::Waiter$new(NS(id, "findSites"))$show()
-      on.exit(waiter$hide())
-      sites_df <- dischargeDataAvailable(state = input$state, site = input$riverinput)
+      ## Show a notifcation while loading sites with discharge data
+      showNotification(ui = "Fetching USGS sites with discharge data. This may take a few minutes.",
+                       duration = NULL,
+                       id = "loadingData",
+                       type = "message"
+      )
+      ## Sites with discharge data available
+      sites_df <- dischargeDataAvailable(state = input$state)
       if (is.null(sites_df)) {
         show_no_results(TRUE)
         sites(NULL)
@@ -48,13 +52,19 @@ inputControlsServer <- function(id) {
       } else {
         show_no_results(FALSE)
         sites(sites_df)
+        ## Update the 'site' drop-down menu
         updateSelectizeInput(session, inputId = "site",
                              choices = sort(sites_df$station_nm),
                              selected = "",
                              server = TRUE)
       }
+      ## Remove notification after done loading sites with discharge data for
+      ## the selected site
+      removeNotification(id = "loadingData")
     })
 
+    ## If no sites with discharge data were found for the selected state, show
+    ## text saying that no discharge data was found
     output$noResultsMessage <- renderText({
       if (show_no_results()) {
         "No discharge results found for this state and search term"
@@ -63,7 +73,7 @@ inputControlsServer <- function(id) {
       }
     })
 
-    # Return reactive values for parent app
+    # Return reactive values to flyfishrApp.R
     return(list(
       sites = sites,
       selected_site = reactive(input$site),

@@ -1,4 +1,4 @@
-### Function to create the discharge plot in StreamNotes app
+### Function to create the discharge graph in flyfishrApp
 
 plotDischarge <- function(site_no) {
 
@@ -29,6 +29,7 @@ plotDischarge <- function(site_no) {
   ## dataRetreival's built in clean names function
   site <- renameNWISColumns(site)
   site_stat <- renameNWISColumns(site_stat)
+
   ## Convert Date column to DateTime for mean daily value data
   site_stat$Date <- as_datetime(site_stat$Date)
 
@@ -51,7 +52,6 @@ plotDischarge <- function(site_no) {
     geom_line(aes(color = "Flow")) +
     geom_point(data = site_stat,
                aes(x = Date, y = Flow, color = "Mean daily value"),
-               # color = "red",
                shape = 17,
                size = 3
     ) +
