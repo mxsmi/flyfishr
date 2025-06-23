@@ -3850,9 +3850,6 @@
     "DESCRIPTION": {
       "checksum": "1ba20d836086ae78eb144005e627cab4"
     },
-    "flyfishrApp.R": {
-      "checksum": "63cb39021c2c0515d68155c2aac48f98"
-    },
     "R/createSiteMap.R": {
       "checksum": "4576c96851e4826b944de13f43d3341a"
     },
@@ -3861,6 +3858,9 @@
     },
     "R/fishingReportPrompt.R": {
       "checksum": "d866a62f9dc8dea549f7df199ef29940"
+    },
+    "R/flyfishrApp.R": {
+      "checksum": "63cb39021c2c0515d68155c2aac48f98"
     },
     "R/moduleCharts.R": {
       "checksum": "5416f345da67be57bb97320f49874a01"
