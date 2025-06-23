@@ -2,22 +2,22 @@
 ### from the flyfishr package. The app is a data dashboard for fly fishermen to
 ### view a map, current water levels, and get an AI generated fishing report.
 
-## Load required libraries
-library(shiny)
-library(dataRetrieval)
-library(ggplot2)
-library(waiter)
-library(lubridate)
-library(dplyr)
-library(stringr)
-library(markdown)
-library(chatLLM)
-library(leaflet)
-library(jsonlite)
-library(devtools)
-
 ## Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
+
+  ## Load required libraries
+  library(shiny)
+  library(dataRetrieval)
+  library(ggplot2)
+  library(waiter)
+  library(lubridate)
+  library(dplyr)
+  library(stringr)
+  library(markdown)
+  library(chatLLM)
+  library(leaflet)
+  library(jsonlite)
+
   ui <- function(request) {
     fluidPage(
 
