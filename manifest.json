@@ -3845,7 +3845,7 @@
       "checksum": "cc2423d00e33999aa6295edc04cb7b64"
     },
     "app.R": {
-      "checksum": "90081998179da1e89dbde90e537f35f6"
+      "checksum": "81b6bbbdfab6ab9a11bae2a6c511c249"
     },
     "DESCRIPTION": {
       "checksum": "1ba20d836086ae78eb144005e627cab4"
@@ -3888,9 +3888,6 @@
     },
     "R/promptParameters.txt": {
       "checksum": "c716b12fbe6b2bfd303144d1e0be18f6"
-    },
-    "R/zzz.R": {
-      "checksum": "96558e11d3374e877037b3b325b6f288"
     },
     "README.md": {
       "checksum": "f4220961ded5960e540b0567eab99074"
