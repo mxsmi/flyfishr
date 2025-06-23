@@ -1,5 +1,18 @@
 ## Shiny app primary document
 
+## Load libraries
+library(shiny)
+library(dataRetrieval)
+library(ggplot2)
+library(waiter)
+library(lubridate)
+library(dplyr)
+library(stringr)
+library(markdown)
+library(chatLLM)
+library(leaflet)
+library(jsonlite)
+
 ui <- function(request) {
   fluidPage(
 
