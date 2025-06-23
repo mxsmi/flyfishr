@@ -16,8 +16,6 @@ library(leaflet)
 library(jsonlite)
 library(devtools)
 
-devtools::load_all()
-
 ## Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
   ui <- function(request) {

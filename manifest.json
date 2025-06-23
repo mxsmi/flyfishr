@@ -3838,20 +3838,17 @@
     ".Rbuildignore": {
       "checksum": "3f9a153e71e4b9b0d28b34466a108dc2"
     },
-    ".rcsignore": {
-      "checksum": "02818dace43442cf10f716798454d32a"
-    },
     ".Renviron": {
       "checksum": "cc2423d00e33999aa6295edc04cb7b64"
     },
     "app.R": {
-      "checksum": "6d0a7f1b604731908242feac66e93d67"
+      "checksum": "90081998179da1e89dbde90e537f35f6"
     },
     "DESCRIPTION": {
       "checksum": "1ba20d836086ae78eb144005e627cab4"
     },
     "flyfishrApp.R": {
-      "checksum": "b6fd1829598814f54738db8cf9c434d9"
+      "checksum": "63cb39021c2c0515d68155c2aac48f98"
     },
     "R/createSiteMap.R": {
       "checksum": "4576c96851e4826b944de13f43d3341a"
@@ -3888,6 +3885,9 @@
     },
     "R/promptParameters.txt": {
       "checksum": "c716b12fbe6b2bfd303144d1e0be18f6"
+    },
+    "R/zzz.R": {
+      "checksum": "96558e11d3374e877037b3b325b6f288"
     },
     "README.md": {
       "checksum": "f4220961ded5960e540b0567eab99074"
