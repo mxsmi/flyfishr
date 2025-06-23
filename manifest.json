@@ -3838,6 +3838,9 @@
     ".Rbuildignore": {
       "checksum": "3f9a153e71e4b9b0d28b34466a108dc2"
     },
+    ".rcsignore": {
+      "checksum": "74c4e1ed9ae64d7fca35c8004fb7e3b8"
+    },
     ".Renviron": {
       "checksum": "cc2423d00e33999aa6295edc04cb7b64"
     },
