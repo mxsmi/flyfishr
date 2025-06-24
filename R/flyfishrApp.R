@@ -18,9 +18,16 @@ flyfishrApp <- function(...) {
   library(leaflet)
   library(jsonlite)
 
+  base_theme <- bslib::bs_theme(bootswatch = "lux")
+
   ui <- function(request) {
     fluidPage(
-
+      theme = bslib::bs_theme_update(theme = base_theme,
+                                     fg = "#000000",
+                                     bg = "#F2E0CF",
+                                     primary = "#000000",
+                                     secondary = "#0066CC4D"
+      ),
       waiter::use_waiter(),
       ## Title panel
       titlePanel("flyfishr App"),

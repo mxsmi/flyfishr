@@ -9,7 +9,10 @@ fishingReportUI <- function(id) {
     column(1),
     column(10,
            br(),
-           actionButton(NS(id, "generateReport"), "Generate AI fishing report"),
+           actionButton(NS(id, "generateReport"), "Generate AI fishing report",
+                        class = "btn-secondary",
+                        style = "color: black !important;"
+            ),
            br(),
            "(Uses github openai model: openai/gpt-4o)",
            br(),
@@ -47,6 +50,11 @@ fishingReportServer <- function(id, selected_site, water_data) {
         flow = water_data$current_discharge()
       )
 
+      showNotification(ui = "Generating fly-fishing report",
+                       duration = NULL,
+                       id = "loadingData",
+                       type = "message"
+      )
       ## Get the response from the AI model
       llm_response <- call_llm(
         prompt = prompt,
@@ -56,6 +64,7 @@ fishingReportServer <- function(id, selected_site, water_data) {
 
       ## Update reactive value with response text
       fishing_report_text(llm_response)
+      removeNotification(id = "loadingData")
     })
 
     ## Render report

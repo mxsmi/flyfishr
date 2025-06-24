@@ -8,5 +8,9 @@ water temperature in Fahrenheit from the internet.
 Please analyze these conditions and provide fishing recommendations including:
 - Recommended flies and techniques
 
+Style considerations:
+- Italicize the name of each section
+- Separate each section with a horizontal line
+
 Report:
 
