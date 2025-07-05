@@ -38,7 +38,7 @@ inputControlsServer <- function(id) {
     observeEvent(input$state, {
       req(input$state)
       ## Show a notifcation while loading sites with discharge data
-      waiter <- waiter::Waiter$new(color = "#004D004D")$show()
+      waiter <- waiter::Waiter$new(color = "#32CD324D")$show()
       on.exit(waiter$hide())
       showNotification(ui = "Fetching USGS sites with discharge data. This may take a few minutes.",
                        duration = NULL,

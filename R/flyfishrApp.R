@@ -26,7 +26,7 @@ flyfishrApp <- function(...) {
                                      fg = "#000000",
                                      bg = "#F2E0CF",
                                      primary = "#000000",
-                                     secondary = "#00CED14D"
+                                     secondary = "#32CD324D"
       ),
       waiter::use_waiter(),
       ## Title panel
