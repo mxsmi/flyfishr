@@ -18,19 +18,31 @@ flyfishrApp <- function(...) {
   library(leaflet)
   library(jsonlite)
 
-  base_theme <- bslib::bs_theme(bootswatch = "lux")
+  # base_theme <- bslib::bs_theme(bootswatch = "pulse")
+  # theme = bslib::bs_theme_update(theme = base_theme,
+  #                                primary = "#000000",
+  #                                bg = "#FFFFFF",
+  #                                fg = "#000000"
+  # )
+  base_theme <- bslib::bs_theme(bootswatch = "pulse")
 
   ui <- function(request) {
     fluidPage(
       theme = bslib::bs_theme_update(theme = base_theme,
-                                     fg = "#000000",
-                                     bg = "#F2E0CF",
-                                     primary = "#000000",
-                                     secondary = "#32CD324D"
+                                     primary = "#337ab7",
+                                     bg = "#FFFFFF",
+                                     fg = "#000000"
       ),
       waiter::use_waiter(),
       ## Title panel
-      titlePanel("flyfishr App"),
+      fluidRow(
+        column(8,
+          h1("Flyfishr")
+        ),
+        column(4,
+          loginControlsUI("login")
+        )
+      ),
 
       ## Module containing the UI input controls
       inputControlsUI("controls"),
@@ -63,12 +75,16 @@ flyfishrApp <- function(...) {
     ## Create fly-fishing report
     fishingReportServer("report", search_data$selected_site, water_data)
 
-    # Automatically bookmark every time an input changes
+    ## Automatically bookmark every time an input changes
     observe({
       reactiveValuesToList(input)
       session$doBookmark()
     })
-    # Update the query string
+
+    ## Handle logging in
+    loginControlsServer("login")
+
+    ## Update the query string
     onBookmarked(updateQueryString)
   }
 
