@@ -37,6 +37,7 @@ loginControlsServer <- function(id) {
         ),
         footer = tagList(
           actionButton(NS(id, "submit_login"), "Login"),
+          actionButton(NS(id, "create_account"), "Create an account"),
           modalButton("Cancel")
         )
       ))
@@ -56,6 +57,37 @@ loginControlsServer <- function(id) {
       } else {
         showNotification("Invalid credentials", type = "error")
         ## Keep modal open for retry
+      }
+    })
+
+    ## Handle create new account
+    observeEvent(input$create_account, {
+      removeModal()
+      showModal(modalDialog(
+        title = "Create new account",
+        div(
+          textInput(NS(id, "new_username"), "Username:", placeholder = "Pick a username"),
+          passwordInput(NS(id, "new_password1"), "Password:", placeholder = "Pick a password"),
+          passwordInput(NS(id, "new_password2"), "Re-enter password:", placeholder = "Confirm password")
+        ),
+        footer = tagList(
+          actionButton(NS(id, "submit_new_credentials"), "Create account"),
+          modalButton("Cancel")
+        )
+      ))
+    })
+
+    ## Check new credentials
+    observeEvent(input$submit_new_credentials, {
+      new_username <- input$new_username
+      new_password1 <- input$new_password1
+      new_password2 <- input$new_password2
+
+      if (new_password1 == new_password2) {
+        showNotification("Account created! You can now login", type = "message")
+        removeModal()
+      } else {
+        showNotification("Password entries do not match", type = "error")
       }
     })
 
