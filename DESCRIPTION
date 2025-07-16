@@ -23,4 +23,5 @@ imports:
     markdown,
     chatLLM,
     leaflet,
-    jsonlite
+    jsonlite,
+    blastula
