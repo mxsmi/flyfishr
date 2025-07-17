@@ -17,7 +17,6 @@ flyfishrApp <- function(...) {
   library(chatLLM)
   library(leaflet)
   library(jsonlite)
-  library(blastula)
   library(DBI)
   library(RMariaDB)
 
