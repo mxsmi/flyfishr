@@ -17,6 +17,9 @@ flyfishrApp <- function(...) {
   library(chatLLM)
   library(leaflet)
   library(jsonlite)
+  library(blastula)
+  library(DBI)
+  library(RMariaDB)
 
   # base_theme <- bslib::bs_theme(bootswatch = "pulse")
   # theme = bslib::bs_theme_update(theme = base_theme,
