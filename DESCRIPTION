@@ -24,4 +24,6 @@ Imports:
     chatLLM,
     leaflet,
     jsonlite,
-    blastula
+    blastula,
+    DBI,
+    RMariaDB
