@@ -1,6 +1,4 @@
 
-library(blastula)
-
 sendUsername <- function(email_add) {
   ## Connect to the database
   conn <- dbConnect(MariaDB(),
@@ -30,12 +28,12 @@ sendUsername <- function(email_add) {
 
     ## Disconnect from the data base and compose password reset email
     dbDisconnect(conn)
-    message <- compose_email(
+    message <- blastula::compose_email(
       glue::glue("The username for your flyfishr account is: {user}")
     )
 
     ## Email credentials. Use creds_envvar() to read from environment variable
-    gmail_creds <- creds_envvar(
+    blastula::gmail_creds <- creds_envvar(
       user = "flyfishrapp@gmail.com",
       pass_envvar = "GMAIL_APP_PASSWORD",
       host = "smtp.gmail.com",
@@ -44,7 +42,7 @@ sendUsername <- function(email_add) {
     )
 
     ## Use in smtp_send to send password rest email
-    smtp_send(
+    blastula::smtp_send(
       email = message,
       to = email_add,
       from = "flyfishrapp@gmail.com",
