@@ -115,7 +115,7 @@ loginControlsServer <- function(id) {
     ## When the user submits their new password, update the ACCOUNT_INFO SQL database
     observeEvent(input$submit_new_password, {
       if (input$token_submitted == reset_token()) {
-        conn <- dbConnect(MariaDB(),
+        conn <- DBI::dbConnect(MariaDB(),
                           host = Sys.getenv("DB_HOST"),
                           port = Sys.getenv("DB_PORT"),
                           user = Sys.getenv("DB_USER"),
@@ -124,12 +124,12 @@ loginControlsServer <- function(id) {
         )
 
         rt <- reset_token()
-        dbExecute(conn,
+        DBI::dbExecute(conn,
            "UPDATE ACCOUNT_INFO
            SET PASSWORD = ?
            WHERE RESET_TOKEN = ?;",
            params = list(input$reset_password1, rt))
-        dbDisconnect(conn)
+        DBI::dbDisconnect(conn)
         showNotification("Password updated!")
         removeModal()
       } else {
@@ -200,7 +200,7 @@ loginControlsServer <- function(id) {
 
       if (new_password1 == new_password2) {
 
-        conn <- dbConnect(MariaDB(),
+        conn <- DBI::dbConnect(MariaDB(),
                           host = Sys.getenv("DB_HOST"),
                           port = Sys.getenv("DB_PORT"),
                           user = Sys.getenv("DB_USER"),
@@ -208,9 +208,9 @@ loginControlsServer <- function(id) {
                           dbname = Sys.getenv("DB_NAME")
         )
 
-        usernames <- as.character(dbGetQuery(conn,
+        usernames <- as.character(DBI::dbGetQuery(conn,
                                              "SELECT USERNAME FROM ACCOUNT_INFO")[,1])
-        emails <- as.character(dbGetQuery(conn,
+        emails <- as.character(DBI::dbGetQuery(conn,
                              "SELECT EMAIL FROM ACCOUNT_INFO")[,1])
 
         if (new_username %in% usernames) {
@@ -219,12 +219,12 @@ loginControlsServer <- function(id) {
         } else if (new_email %in% emails) {
           showNotification("There is already an account for that email", type = "error")
         } else {
-          user_num <- dbGetQuery(conn,
+          user_num <- DBI::dbGetQuery(conn,
             "SELECT USER_ID
             FROM ACCOUNT_INFO
             ORDER BY USER_ID")[,1]
 
-          dbExecute(conn,
+          DBI::dbExecute(conn,
                       "INSERT INTO ACCOUNT_INFO
                       (USER_ID, USERNAME, PASSWORD, EMAIL, DATE_CREATED, ACCESS)
                       VALUES (?, ?, ?, ?, ?, ?)",
@@ -237,7 +237,7 @@ loginControlsServer <- function(id) {
                     )
           )
 
-          dbDisconnect(conn)
+          DBI::dbDisconnect(conn)
           showNotification("Account created! You can now login", type = "message")
           removeModal()
         }
@@ -249,7 +249,7 @@ loginControlsServer <- function(id) {
     ## Authentication function
     authenticate_user <- function(username, password) {
 
-      conn <- dbConnect(MariaDB(),
+      conn <- DBI::dbConnect(MariaDB(),
                         host = Sys.getenv("DB_HOST"),
                         port = Sys.getenv("DB_PORT"),
                         user = Sys.getenv("DB_USER"),
@@ -257,10 +257,10 @@ loginControlsServer <- function(id) {
                         dbname = Sys.getenv("DB_NAME")
       )
 
-      usernames <- as.character(dbGetQuery(conn,
+      usernames <- as.character(DBI::dbGetQuery(conn,
                               "SELECT USERNAME FROM ACCOUNT_INFO")[,1])
 
-      passwords <- as.character(dbGetQuery(conn,
+      passwords <- as.character(DBI::dbGetQuery(conn,
                               "SELECT PASSWORD FROM ACCOUNT_INFO")[,1])
 
       username_auth <- FALSE
@@ -272,7 +272,7 @@ loginControlsServer <- function(id) {
       if (password %in% passwords) {
         password_auth = TRUE
       }
-      dbDisconnect(conn)
+      DBI::dbDisconnect(conn)
       return(username_auth && password_auth)
     }
 

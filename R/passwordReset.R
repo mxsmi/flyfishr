@@ -2,7 +2,7 @@
 passwordReset <- function(reset_token, email_add) {
 
   ## Connect to the database
-  conn <- dbConnect(MariaDB(),
+  conn <- DBI::dbConnect(RMariaDB::MariaDB(),
                     host = Sys.getenv("DB_HOST"),
                     port = Sys.getenv("DB_PORT"),
                     user = Sys.getenv("DB_USER"),
@@ -12,14 +12,14 @@ passwordReset <- function(reset_token, email_add) {
 
   ## Get email address entered by user to use in a SQL query to retrieve
   ## the password reset token for that user
-  dbExecute(conn,
+  DBI::dbExecute(conn,
              "UPDATE ACCOUNT_INFO
              SET RESET_TOKEN = ?
              WHERE EMAIL = ?;",
              params = list(reset_token, email_add))
 
    ## Disconnect from the data base and compose password reset email
-   dbDisconnect(conn)
+   DBI::dbDisconnect(conn)
     message <- blastula::compose_email(
       glue::glue("You requested a password reset for your flyfishr account. Here is your
       password reset token: \n '{reset_token}'.")

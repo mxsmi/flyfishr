@@ -1,7 +1,7 @@
 
 sendUsername <- function(email_add) {
   ## Connect to the database
-  conn <- dbConnect(MariaDB(),
+  conn <- DBI::dbConnect(RMariaDB::MariaDB(),
                     host = Sys.getenv("DB_HOST"),
                     port = Sys.getenv("DB_PORT"),
                     user = Sys.getenv("DB_USER"),
@@ -10,24 +10,24 @@ sendUsername <- function(email_add) {
   )
 
   ## Get list of emails for all accounts
-  emails <- as.character(dbGetQuery(conn,
+  emails <- as.character(DBI::dbGetQuery(conn,
                                     "SELECT EMAIL FROM ACCOUNT_INFO")[,1])
 
   ## Check if inputted email is associated with existing account. If not, show a
   ## Notification.
   if (!email_add %in% emails) {
     showNotification("That email is not associated with an account", type = "error")
-    dbDisconnect(conn)
+    DBI::dbDisconnect(conn)
   } else {
     ## Get email address entered by user to use in a SQL query retrieve the
     ## username associated with that email
-    user <- user <- dbGetQuery(conn,
+    user <- DBI::dbGetQuery(conn,
                                "SELECT USERNAME FROM ACCOUNT_INFO WHERE EMAIL = ?;",
                                params = list(email_add)
     )[,1]
 
     ## Disconnect from the data base and compose password reset email
-    dbDisconnect(conn)
+    DBI::dbDisconnect(conn)
     message <- blastula::compose_email(
       glue::glue("The username for your flyfishr account is: {user}")
     )
