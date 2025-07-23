@@ -33,7 +33,7 @@ sendUsername <- function(email_add) {
     )
 
     ## Email credentials. Use creds_envvar() to read from environment variable
-    blastula::gmail_creds <- creds_envvar(
+    gmail_creds <- blastula::creds_envvar(
       user = "flyfishrapp@gmail.com",
       pass_envvar = "GMAIL_APP_PASSWORD",
       host = "smtp.gmail.com",
