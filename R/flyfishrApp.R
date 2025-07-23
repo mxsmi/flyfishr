@@ -52,7 +52,8 @@ flyfishrApp <- function(...) {
       tabsetPanel(
         tabPanel("Map", mapUI("map")),
         tabPanel("Flows & Temperature", chartsUI("charts")),
-        tabPanel("Fly Fishing Report", fishingReportUI("report"))
+        tabPanel("Fly Fishing Report", fishingReportUI("report")),
+        tabPanel("Fish Log", fishLogUI("fishlog"))
       )
     )
   }
@@ -83,7 +84,10 @@ flyfishrApp <- function(...) {
     })
 
     ## Handle logging in
-    loginControlsServer("login")
+    logged_in <- loginControlsServer("login")
+
+    ## Fish log server
+    fishLogServer("fishlog", logged_in)
 
     ## Update the query string
     onBookmarked(updateQueryString)

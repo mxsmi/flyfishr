@@ -291,5 +291,9 @@ loginControlsServer <- function(id) {
     observeEvent(input$logout, {
       logged_in(FALSE)
     })
+
+    return(reactive({
+      logged_in()
+    }))
   })
 }
