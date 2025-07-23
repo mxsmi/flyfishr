@@ -122,13 +122,13 @@ loginControlsServer <- function(id) {
                           password = Sys.getenv("DB_PASSWORD"),
                           dbname = Sys.getenv("DB_NAME")
         )
-
+        hashed_pw <- hashpw(input$reset_password1, salt = gensalt())
         rt <- reset_token()
         DBI::dbExecute(conn,
            "UPDATE ACCOUNT_INFO
            SET PASSWORD = ?
            WHERE RESET_TOKEN = ?;",
-           params = list(input$reset_password1, rt))
+           params = list(hashed_pw, rt))
         DBI::dbDisconnect(conn)
         showNotification("Password updated!")
         removeModal()
@@ -219,18 +219,15 @@ loginControlsServer <- function(id) {
         } else if (new_email %in% emails) {
           showNotification("There is already an account for that email", type = "error")
         } else {
-          user_num <- DBI::dbGetQuery(conn,
-            "SELECT USER_ID
-            FROM ACCOUNT_INFO
-            ORDER BY USER_ID")[,1]
 
+          hashed_pw <- bcrypt::hashpw(new_password1, salt = gensalt())
           DBI::dbExecute(conn,
                       "INSERT INTO ACCOUNT_INFO
-                      (USER_ID, USERNAME, PASSWORD, EMAIL, DATE_CREATED, ACCESS)
-                      VALUES (?, ?, ?, ?, ?, ?)",
-                      params = list(user_num[length(user_num)] + 1,
+                      (USERNAME, PASSWORD, EMAIL, DATE_CREATED, ACCESS)
+                      VALUES (?, ?, ?, ?, ?)",
+                      params = list(
                       new_username,
-                      new_password1,
+                      hashed_pw,
                       new_email,
                       as.character(Sys.Date()),
                       'user'
@@ -263,13 +260,18 @@ loginControlsServer <- function(id) {
       passwords <- as.character(DBI::dbGetQuery(conn,
                               "SELECT PASSWORD FROM ACCOUNT_INFO")[,1])
 
+      hash <- as.character(DBI::dbGetQuery(conn,
+                                           "SELECT PASSWORD FROM ACCOUNT_INFO
+                                           WHERE USERNAME = ?;",
+                                           params = list(username)))
+
       username_auth <- FALSE
       password_auth <- FALSE
 
       if (username %in% usernames) {
         username_auth = TRUE
       }
-      if (password %in% passwords) {
+      if (checkpw(password, hash)) {
         password_auth = TRUE
       }
       DBI::dbDisconnect(conn)
