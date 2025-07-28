@@ -18,13 +18,8 @@ flyfishrApp <- function(...) {
   library(leaflet)
   library(jsonlite)
   library(blastula)
+  library(shinyTime)
 
-  # base_theme <- bslib::bs_theme(bootswatch = "pulse")
-  # theme = bslib::bs_theme_update(theme = base_theme,
-  #                                primary = "#000000",
-  #                                bg = "#FFFFFF",
-  #                                fg = "#000000"
-  # )
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
 
   ui <- function(request) {

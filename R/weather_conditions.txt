@@ -1,0 +1,17 @@
+Sunny
+Partly Cloudy
+Overcast
+Light Rain
+Heavy Rain
+Drizzle
+Thunderstorms
+Snow
+Light Snow
+Heavy Snow
+Sleet/Freezing Rain
+Fog/Mist
+Calm/No Wind
+Light Breeze
+Windy
+Variable/Changing
+Other

@@ -1,0 +1,325 @@
+river_name,state_abb
+Madison River,MT
+Yellowstone River,MT
+Bighorn River,MT
+Missouri River,MT
+Gallatin River,MT
+Jefferson River,MT
+Beaverhead River,MT
+Big Hole River,MT
+Clark Fork River,MT
+Blackfoot River,MT
+Ruby River,MT
+Smith River,MT
+Dearborn River,MT
+Sun River,MT
+Judith River,MT
+Green River,WY
+North Platte River,WY
+Snake River,WY
+Firehole River,WY
+Gibbon River,WY
+Lamar River,WY
+Slough Creek,WY
+Gros Ventre River,WY
+Hoback River,WY
+Salt River,WY
+Colorado River,CO
+South Platte River,CO
+Arkansas River,CO
+Gunnison River,CO
+Roaring Fork River,CO
+Fryingpan River,CO
+Eagle River,CO
+Blue River,CO
+Taylor River,CO
+Animas River,CO
+San Juan River,CO
+Dolores River,CO
+Rio Grande River,CO
+Cache la Poudre River,CO
+Big Thompson River,CO
+St. Vrain Creek,CO
+Clear Creek,CO
+Henry's Fork,ID
+Boise River,ID
+Payette River,ID
+Salmon River,ID
+Clearwater River,ID
+St. Joe River,ID
+Coeur d'Alene River,ID
+South Fork Snake River,ID
+Teton River,ID
+Big Wood River,ID
+Little Wood River,ID
+Silver Creek,ID
+Deschutes River,OR
+McKenzie River,OR
+Rogue River,OR
+Umpqua River,OR
+John Day River,OR
+Grande Ronde River,OR
+Metolius River,OR
+Crooked River,OR
+Owyhee River,OR
+Klamath River,OR
+Sandy River,OR
+Clackamas River,OR
+Wilson River,OR
+Trask River,OR
+Nestucca River,OR
+Siletz River,OR
+Alsea River,OR
+Siuslaw River,OR
+American River,CA
+Tuolumne River,CA
+Merced River,CA
+Kings River,CA
+Kern River,CA
+Owens River,CA
+McCloud River,CA
+Sacramento River,CA
+Feather River,CA
+Yuba River,CA
+Truckee River,CA
+Mokelumne River,CA
+Stanislaus River,CA
+San Joaquin River,CA
+Fall River,CA
+Hat Creek,CA
+Pit River,CA
+Russian River,CA
+Eel River,CA
+Klamath River,CA
+Trinity River,CA
+Smith River,CA
+Mad River,CA
+Gualala River,CA
+Garcia River,CA
+Navarro River,CA
+Salmon River,CA
+Scott River,CA
+Shasta River,CA
+Skagit River,WA
+Yakima River,WA
+Wenatchee River,WA
+Methow River,WA
+Okanogan River,WA
+Stillaguamish River,WA
+Snoqualmie River,WA
+Cedar River,WA
+Green River,WA
+White River,WA
+Puyallup River,WA
+Nisqually River,WA
+Chehalis River,WA
+Humptulips River,WA
+Quinault River,WA
+Queets River,WA
+Hoh River,WA
+Elwha River,WA
+Dungeness River,WA
+Dosewallips River,WA
+Hamma Hamma River,WA
+Skokomish River,WA
+Wynoochee River,WA
+Satsop River,WA
+Chehalis River,WA
+Cowlitz River,WA
+Lewis River,WA
+Kalama River,WA
+Washougal River,WA
+Wind River,WA
+Klickitat River,WA
+Au Sable River,MI
+Manistee River,MI
+Pere Marquette River,MI
+Muskegon River,MI
+Grand River,MI
+Kalamazoo River,MI
+St. Joseph River,MI
+Boardman River,MI
+Betsie River,MI
+Platte River,MI
+Pine River,MI
+Rifle River,MI
+Thunder Bay River,MI
+Sturgeon River,MI
+Escanaba River,MI
+Menominee River,MI
+Paint River,MI
+Brule River,WI
+Wolf River,WI
+Peshtigo River,WI
+Oconto River,WI
+Fox River,WI
+Wisconsin River,WI
+Black River,WI
+Chippewa River,WI
+St. Croix River,WI
+Namekagon River,WI
+Flambeau River,WI
+Jump River,WI
+Kickapoo River,WI
+Pine River,WI
+Bois Brule River,WI
+White River,AR
+Buffalo River,AR
+Kings River,AR
+War Eagle Creek,AR
+Caddo River,AR
+Saline River,AR
+Spring River,AR
+Eleven Point River,AR
+Current River,MO
+Jacks Fork,MO
+Gasconade River,MO
+Meramec River,MO
+Big Piney River,MO
+Niangua River,MO
+James River,MO
+White River,MO
+North Fork White River,MO
+Bryant Creek,MO
+Delaware River,PA
+Lackawaxen River,PA
+Lehigh River,PA
+Schuylkill River,PA
+Susquehanna River,PA
+Juniata River,PA
+Pine Creek,PA
+Kettle Creek,PA
+Cross Fork,PA
+First Fork Sinnemahoning Creek,PA
+Penns Creek,PA
+Big Spring Creek,PA
+Yellow Breeches Creek,PA
+Letort Spring Run,PA
+Falling Spring Creek,PA
+Little Juniata River,PA
+Spring Creek,PA
+Bald Eagle Creek,PA
+Loyalsock Creek,PA
+Lycoming Creek,PA
+Little Pine Creek,PA
+Cedar Run,PA
+Slate Run,PA
+Young Womans Creek,PA
+Kettle Creek,PA
+Cross Fork,PA
+Ausable River,NY
+Willowemoc Creek,NY
+Beaverkill River,NY
+Neversink River,NY
+Delaware River,NY
+Salmon River,NY
+Cattaraugus Creek,NY
+Genesee River,NY
+Finger Lakes tributaries,NY
+Battenkill River,NY
+Housatonic River,CT
+Farmington River,CT
+Shetucket River,CT
+Naugatuck River,CT
+Connecticut River,CT
+Deerfield River,MA
+Westfield River,MA
+Swift River,MA
+Millers River,MA
+Connecticut River,MA
+Housatonic River,MA
+Green River,MA
+Connecticut River,VT
+Battenkill River,VT
+White River,VT
+Lamoille River,VT
+Winooski River,VT
+Mad River,VT
+Dog River,VT
+Ompompanoosuc River,VT
+Wells River,VT
+Passumpsic River,VT
+Clyde River,VT
+Missisquoi River,VT
+Ottauquechee River,VT
+Black River,VT
+Williams River,VT
+Saxtons River,VT
+West River,VT
+Winhall River,VT
+Connecticut River,NH
+Androscoggin River,NH
+Saco River,NH
+Merrimack River,NH
+Pemigewasset River,NH
+Baker River,NH
+Smith River,NH
+Swift River,NH
+Ammonoosuc River,NH
+Israel River,NH
+Johns River,NH
+Peabody River,NH
+Ellis River,NH
+Saco River,ME
+Androscoggin River,ME
+Kennebec River,ME
+Penobscot River,ME
+Machias River,ME
+East Machias River,ME
+Pleasant River,ME
+Narraguagus River,ME
+Union River,ME
+Bagaduce River,ME
+Sheepscot River,ME
+Damariscotta River,ME
+St. George River,ME
+Medomak River,ME
+Pemaquid River,ME
+Kennebago River,ME
+Rangeley River,ME
+Carrabassett River,ME
+Sandy River,ME
+Sebasticook River,ME
+Mattawamkeag River,ME
+East Branch Penobscot River,ME
+West Branch Penobscot River,ME
+Allagash River,ME
+St. John River,ME
+Fish River,ME
+Aroostook River,ME
+Presque Isle Stream,ME
+Meduxnekeag River,ME
+St. Croix River,ME
+Dennys River,ME
+Orange River,ME
+Tunk Stream,ME
+Ducktrap River,ME
+Megunticook River,ME
+Chickawaukie Stream,ME
+Oyster River,ME
+Lamprey River,ME
+Cocheco River,ME
+Salmon Falls River,ME
+Piscataqua River,ME
+York River,ME
+Mousam River,ME
+Little Ossipee River,ME
+Ossipee River,ME
+Presumpscot River,ME
+Royal River,ME
+Harraseeket River,ME
+Cousins River,ME
+Bradbury River,ME
+Morse River,ME
+Sprague River,ME
+Cathance River,ME
+Abagadasset River,ME
+Muddy River,ME
+Nequasset Creek,ME
+Sasanoa River,ME
+Back River,ME
+Hockomock River,ME
+Ducktrap River,ME
+Goose River,ME
+Passagassawakeag River,ME
+Marsh River,ME
