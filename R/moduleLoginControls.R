@@ -14,11 +14,11 @@ loginControlsServer <- function(id) {
   moduleServer(id, function(input, output, session) {
 
     ## Reactive value to keep track of logged in status
-    logged_in <- reactiveVal(FALSE)
+    logged_in <- reactiveVal(list(FALSE, NULL))
 
     ## Conditionally display either log-in or log-out button
     output$login_logout_btn <- renderUI({
-      if (logged_in()) {
+      if (logged_in()[[1]]) {
         actionButton(NS(id, "logout"), "Logout",
                      class = "btn-secondary",
                      style = "background-color: #0EA5E9; color: black !important; border-color: #000000; border-width: 2px;")
@@ -164,7 +164,24 @@ loginControlsServer <- function(id) {
       ## Authenticate credentials
       if (authenticate_user(username, password)) {
         removeModal()
-        logged_in(TRUE)
+
+        conn <- dbConnect(MariaDB(),
+                          host = Sys.getenv("DB_HOST"),
+                          port = Sys.getenv("DB_PORT"),
+                          user = Sys.getenv("DB_USER"),
+                          password = Sys.getenv("DB_PASSWORD"),
+                          dbname = Sys.getenv("DB_NAME")
+        )
+
+        user_id <- dbGetQuery(conn,
+                              "SELECT USER_ID FROM ACCOUNT_INFO
+                              WHERE USERNAME = ?",
+                              params = list(username)
+                              )[1,1]
+
+        dbDisconnect(conn)
+
+        logged_in(list(TRUE, user_id))
         showNotification("Login successful!", type = "message")
         ## Update UI for logged-in state
       } else {
@@ -280,7 +297,7 @@ loginControlsServer <- function(id) {
 
     ## Display login status
     output$login_status <- renderText({
-      if (logged_in()) {
+      if (logged_in()[[1]]) {
         paste0("Logged in as: ", input$username)
       } else {
         ""
@@ -289,7 +306,7 @@ loginControlsServer <- function(id) {
 
     ## Handle log out
     observeEvent(input$logout, {
-      logged_in(FALSE)
+      logged_in(list(FALSE, NULL))
     })
 
     return(reactive({

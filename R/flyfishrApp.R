@@ -19,6 +19,8 @@ flyfishrApp <- function(...) {
   library(jsonlite)
   library(blastula)
   library(shinyTime)
+  library(DT)
+  library(bcrypt)
 
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
 
@@ -40,11 +42,7 @@ flyfishrApp <- function(...) {
         )
       ),
 
-      ## Module containing the UI input controls
       inputControlsUI("controls"),
-      fileInput("fish_photo", "Upload Photo (optional)",
-                accept = c('.jpg', '.jpeg', '.png', '.heic', '.heif', '.webp'),
-                width = "100%"),
 
       ## Modules for the Map, Flow/Temp graphs, and fly-fishing report
       tabsetPanel(
