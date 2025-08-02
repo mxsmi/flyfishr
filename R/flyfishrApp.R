@@ -22,6 +22,7 @@ flyfishrApp <- function(...) {
   library(DT)
   library(bcrypt)
   library(pool)
+  library(RMariaDB)
 
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
 

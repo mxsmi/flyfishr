@@ -26,14 +26,6 @@ fishLogServer <- function(id, pool, logged_in) {
       req(logged_in()[[1]])
       ### Capture the current user id
       user_id <- logged_in()[[2]]
-      ### Connect to he database
-      # conn <- dbConnect(MariaDB(),
-      #                   host = Sys.getenv("DB_HOST"),
-      #                   port = Sys.getenv("DB_PORT"),
-      #                   user = Sys.getenv("DB_USER"),
-      #                   password = Sys.getenv("DB_PASSWORD"),
-      #                   dbname = Sys.getenv("DB_NAME")
-      # )
       ### Pull the fish data for the currently logged in user
       fish_log <- dbGetQuery(pool,
                              "SELECT FISH_ID, USER_ID, CATCH_DATE, CATCH_TIME, CATCH_WATER,
@@ -42,9 +34,6 @@ fishLogServer <- function(id, pool, logged_in) {
                              FROM FISH_LOG
                              WHERE USER_ID = ?;",
                              params = list(user_id))
-
-      ### Disconnect from the data base
-      # dbDisconnect(conn)
       ### Return the fish data for the currently logged in user
       fish_log
     })
@@ -131,14 +120,6 @@ fishLogServer <- function(id, pool, logged_in) {
       } else if (input$species == "") {
         showNotification("Species is required", type = "error")
       } else {
-        ### Connect to the database
-        # conn <- dbConnect(MariaDB(),
-        #                   host = Sys.getenv("DB_HOST"),
-        #                   port = Sys.getenv("DB_PORT"),
-        #                   user = Sys.getenv("DB_USER"),
-        #                   password = Sys.getenv("DB_PASSWORD"),
-        #                   dbname = Sys.getenv("DB_NAME")
-        # )
         ### Capture user_id
         user_id <- logged_in()[[2]]
         ### Body of water is a drop-down menu of options in the form 'water name, state'.
@@ -175,8 +156,6 @@ fishLogServer <- function(id, pool, logged_in) {
                     photo_path
                   )
         )
-        ### Disconnect from the database
-        # dbDisconnect(conn)
         ### Activate the refresh trigger to update the reactive fish_data() containing
         ### the rows to be displayed in the Fish_Log UI
         values$refresh_trigger <- values$refresh_trigger + 1 %% 2
@@ -191,14 +170,6 @@ fishLogServer <- function(id, pool, logged_in) {
     observeEvent(input$delete_log_line, {
       ### Pull out the FISH_ID's of the currently selected log lines(s) to delete
       delete <- fish_data()[input$fish_table_rows_selected, ]$FISH_ID
-      ### Connect to the database
-      # conn <- dbConnect(MariaDB(),
-      #                   host = Sys.getenv("DB_HOST"),
-      #                   port = Sys.getenv("DB_PORT"),
-      #                   user = Sys.getenv("DB_USER"),
-      #                   password = Sys.getenv("DB_PASSWORD"),
-      #                   dbname = Sys.getenv("DB_NAME")
-      # )
       ### If there is at least one currently selected log line, delete it
       if (length(delete) > 0) {
         ### Placeholder string (a vector of '?') the length of the FISH_ID's to delete
@@ -207,8 +178,6 @@ fishLogServer <- function(id, pool, logged_in) {
         dbExecute(pool,
                   paste("DELETE FROM FISH_LOG WHERE FISH_ID IN (", placeholders, ")"),
                   params = as.list(delete))
-        ### Disconnect from the database
-        # dbDisconnect(conn)
         ### Activate refresh trigger to update the reactive containing the data to
         ### display in the Fish Log UI
         values$refresh_trigger <- values$refresh_trigger + 1 %% 2
@@ -230,14 +199,6 @@ fishLogServer <- function(id, pool, logged_in) {
       } else {
         ### Capture FISH_ID of the log line to edit
         fish_id <- fish_data()[input$fish_table_rows_selected,]$FISH_ID
-        ### Connect to the database
-        # conn <- dbConnect(MariaDB(),
-        #                   host = Sys.getenv("DB_HOST"),
-        #                   port = Sys.getenv("DB_PORT"),
-        #                   user = Sys.getenv("DB_USER"),
-        #                   password = Sys.getenv("DB_PASSWORD"),
-        #                   dbname = Sys.getenv("DB_NAME")
-        # )
         ### Capture the row with the FISH_ID to be updated
         log_line <- dbGetQuery(pool,
                                "SELECT DATE_FORMAT(CATCH_DATE, '%Y-%m-%d') as CATCH_DATE,
@@ -258,8 +219,6 @@ fishLogServer <- function(id, pool, logged_in) {
         log_line[3] = paste(log_line[3], log_line[4], sep = ", ")
         ### Remove the fourth element, which is state
         log_line <- log_line[-4]
-        ### Disconnect from the database
-        # dbDisconnect(conn)
         ### UI form for editing the log line. Set initially selected values to the
         ### values pulled from the database for that log line
         showModal(modalDialog(
@@ -311,14 +270,6 @@ fishLogServer <- function(id, pool, logged_in) {
       } else if (input$species == "") {
         showNotification("Species is required", type = "error")
       } else {
-        ### Connect to the database
-        # conn <- dbConnect(MariaDB(),
-        #                   host = Sys.getenv("DB_HOST"),
-        #                   port = Sys.getenv("DB_PORT"),
-        #                   user = Sys.getenv("DB_USER"),
-        #                   password = Sys.getenv("DB_PASSWORD"),
-        #                   dbname = Sys.getenv("DB_NAME")
-        # )
         ### Capture FISH_ID of the log line to be updated
         fish_id <- fish_data()[input$fish_table_rows_selected,]$FISH_ID
         ### Capture the photo path that was previously in the database for this
@@ -371,8 +322,6 @@ fishLogServer <- function(id, pool, logged_in) {
                     fish_id
                   )
         )
-        ### Disconnect from the database
-        # dbDisconnect(conn)
         ### Activate the refresh trigger to refresh the data displayed in the
         ### Fish Log UI
         values$refresh_trigger <- values$refresh_trigger + 1 %% 2
