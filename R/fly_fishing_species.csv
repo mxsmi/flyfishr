@@ -1,0 +1,67 @@
+fish_name,species_category
+Brown Trout,trout_species
+Rainbow Trout,trout_species
+Brook Trout,trout_species
+Cutthroat Trout,trout_species
+Lake Trout,trout_species
+Golden Trout,trout_species
+Bull Trout,trout_species
+Dolly Varden,trout_species
+Grayling,trout_species
+Atlantic Salmon,salmon_species
+Chinook Salmon,salmon_species
+Coho Salmon,salmon_species
+Sockeye Salmon,salmon_species
+Pink Salmon,salmon_species
+Chum Salmon,salmon_species
+Steelhead,salmon_species
+Largemouth Bass,bass_species
+Smallmouth Bass,bass_species
+Spotted Bass,bass_species
+Striped Bass,bass_species
+White Bass,bass_species
+Northern Pike,pike_species
+Muskie,pike_species
+Chain Pickerel,pike_species
+Bluegill,panfish_species
+Redear Sunfish,panfish_species
+Pumpkinseed,panfish_species
+Rock Bass,panfish_species
+White Perch,panfish_species
+Yellow Perch,panfish_species
+Crappie,panfish_species
+Tarpon,saltwater_species
+Bonefish,saltwater_species
+Permit,saltwater_species
+Redfish,saltwater_species
+Snook,saltwater_species
+Striped Bass,saltwater_species
+Bluefish,saltwater_species
+False Albacore,saltwater_species
+Spanish Mackerel,saltwater_species
+Cobia,saltwater_species
+Jack Crevalle,saltwater_species
+Barracuda,saltwater_species
+Roosterfish,saltwater_species
+Dorado,saltwater_species
+Tuna,saltwater_species
+Sailfish,saltwater_species
+Marlin,saltwater_species
+Pompano,saltwater_species
+Seatrout,saltwater_species
+Flounder,saltwater_species
+Carp,other_freshwater
+Gar,other_freshwater
+Bowfin,other_freshwater
+Redhorse Sucker,other_freshwater
+Fallfish,other_freshwater
+Chub,other_freshwater
+Dace,other_freshwater
+Whitefish,other_freshwater
+Walleye,other_freshwater
+Sauger,other_freshwater
+Drum,other_freshwater
+Burbot,other_freshwater
+Channel Catfish,other_freshwater
+Flathead Catfish,other_freshwater
+Other specify,Unknown

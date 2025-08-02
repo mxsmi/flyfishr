@@ -18,14 +18,20 @@ flyfishrApp <- function(...) {
   library(leaflet)
   library(jsonlite)
   library(blastula)
+  library(shinyTime)
+  library(DT)
+  library(bcrypt)
+  library(pool)
 
-  # base_theme <- bslib::bs_theme(bootswatch = "pulse")
-  # theme = bslib::bs_theme_update(theme = base_theme,
-  #                                primary = "#000000",
-  #                                bg = "#FFFFFF",
-  #                                fg = "#000000"
-  # )
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
+
+  pool <- dbPool(MariaDB(),
+                    host = Sys.getenv("DB_HOST"),
+                    port = Sys.getenv("DB_PORT"),
+                    user = Sys.getenv("DB_USER"),
+                    password = Sys.getenv("DB_PASSWORD"),
+                    dbname = Sys.getenv("DB_NAME")
+  )
 
   ui <- function(request) {
     fluidPage(
@@ -45,14 +51,14 @@ flyfishrApp <- function(...) {
         )
       ),
 
-      ## Module containing the UI input controls
       inputControlsUI("controls"),
 
       ## Modules for the Map, Flow/Temp graphs, and fly-fishing report
       tabsetPanel(
         tabPanel("Map", mapUI("map")),
         tabPanel("Flows & Temperature", chartsUI("charts")),
-        tabPanel("Fly Fishing Report", fishingReportUI("report"))
+        tabPanel("Fly Fishing Report", fishingReportUI("report")),
+        tabPanel("Fish Log", fishLogUI("fishlog"))
       )
     )
   }
@@ -83,10 +89,18 @@ flyfishrApp <- function(...) {
     })
 
     ## Handle logging in
-    loginControlsServer("login")
+    logged_in <- loginControlsServer("login", pool)
+
+    ## Fish log server
+    fishLogServer("fishlog", pool, logged_in)
 
     ## Update the query string
     onBookmarked(updateQueryString)
+
+    # Clean up pool when session ends
+    onStop(function() {
+      poolClose(pool)
+    })
   }
 
   shinyApp(ui, server, enableBookmarking = "url")

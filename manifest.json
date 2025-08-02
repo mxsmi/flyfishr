@@ -42,6 +42,33 @@
         "Built": "R 4.5.0; ; 2025-03-31 21:50:56 UTC; unix"
       }
     },
+    "DT": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "DT",
+        "Type": "Package",
+        "Title": "A Wrapper of the JavaScript Library 'DataTables'",
+        "Version": "0.33",
+        "Authors@R": "c(\n    person(\"Yihui\", \"Xie\", role = \"aut\"),\n    person(\"Joe\", \"Cheng\", email = \"joe@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Xianying\", \"Tan\", role = \"aut\"),\n    person(\"JJ\", \"Allaire\", role = \"ctb\"),\n    person(\"Maximilian\", \"Girlich\", role = \"ctb\"),\n    person(\"Greg\", \"Freedman Ellis\", role = \"ctb\"),\n    person(\"Johannes\", \"Rauh\", role = \"ctb\"),\n    person(\"SpryMedia Limited\", role = c(\"ctb\", \"cph\"), comment = \"DataTables in htmlwidgets/lib\"),\n    person(\"Brian\", \"Reavis\", role = c(\"ctb\", \"cph\"), comment = \"selectize.js in htmlwidgets/lib\"),\n    person(\"Leon\", \"Gersen\", role = c(\"ctb\", \"cph\"), comment = \"noUiSlider in htmlwidgets/lib\"),\n    person(\"Bartek\", \"Szopka\", role = c(\"ctb\", \"cph\"), comment = \"jquery.highlight.js in htmlwidgets/lib\"),\n    person(\"Alex\", \"Pickering\", role = c(\"ctb\")),\n    person(\"William\", \"Holmes\", role = c(\"ctb\")),\n    person(\"Mikko\", \"Marttila\", role = c(\"ctb\")),\n    person(\"Andres\", \"Quintero\", role = c(\"ctb\")),\n    person(\"Stéphane\", \"Laurent\", role = c(\"ctb\")),\n    person(given = \"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n    )",
+        "Description": "Data objects in R can be rendered as HTML tables using the\n    JavaScript library 'DataTables' (typically via R Markdown or Shiny). The\n    'DataTables' library has been included in this R package. The package name\n    'DT' is an abbreviation of 'DataTables'.",
+        "URL": "https://github.com/rstudio/DT",
+        "BugReports": "https://github.com/rstudio/DT/issues",
+        "License": "GPL-3 | file LICENSE",
+        "Imports": "htmltools (>= 0.3.6), htmlwidgets (>= 1.3), httpuv, jsonlite\n(>= 0.9.16), magrittr, crosstalk, jquerylib, promises",
+        "Suggests": "knitr (>= 1.8), rmarkdown, shiny (>= 1.6), bslib, future,\ntestit, tibble",
+        "VignetteBuilder": "knitr",
+        "RoxygenNote": "7.3.1",
+        "Encoding": "UTF-8",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-04-03 14:36:50 UTC; yihui",
+        "Author": "Yihui Xie [aut],\n  Joe Cheng [aut, cre],\n  Xianying Tan [aut],\n  JJ Allaire [ctb],\n  Maximilian Girlich [ctb],\n  Greg Freedman Ellis [ctb],\n  Johannes Rauh [ctb],\n  SpryMedia Limited [ctb, cph] (DataTables in htmlwidgets/lib),\n  Brian Reavis [ctb, cph] (selectize.js in htmlwidgets/lib),\n  Leon Gersen [ctb, cph] (noUiSlider in htmlwidgets/lib),\n  Bartek Szopka [ctb, cph] (jquery.highlight.js in htmlwidgets/lib),\n  Alex Pickering [ctb],\n  William Holmes [ctb],\n  Mikko Marttila [ctb],\n  Andres Quintero [ctb],\n  Stéphane Laurent [ctb],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Joe Cheng <joe@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-04-04 05:03:17 UTC",
+        "Built": "R 4.5.0; ; 2025-04-01 23:35:17 UTC; unix"
+      }
+    },
     "MASS": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -262,6 +289,34 @@
         "Date/Publication": "2015-07-28 08:03:37",
         "Built": "R 4.5.0; aarch64-apple-darwin20; 2025-03-31 21:43:03 UTC; unix",
         "Archs": "base64enc.so.dSYM"
+      }
+    },
+    "bcrypt": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "bcrypt",
+        "Type": "Package",
+        "Title": "'Blowfish' Key Derivation and Password Hashing",
+        "Version": "1.2.0",
+        "Authors@R": "c(\n    person(\"Jeroen\", \"Ooms\", role = c(\"aut\", \"cre\"), email = \"jeroenooms@gmail.com\",\n      comment = c(ORCID = \"0000-0002-4035-0289\")),\n    person(\"Damien\", \"Miller\", role = \"cph\", comment = 'blowfish algorithm'),\n    person(\"Niels\", \"Provos\", role = \"cph\", comment = 'py_bcrypt code'))",
+        "Description": "Bindings to the 'blowfish' password hashing algorithm\n    <https://www.openbsd.org/papers/bcrypt-paper.pdf> derived from\n    the 'OpenBSD' implementation.",
+        "URL": "https://jeroen.r-universe.dev/bcrypt",
+        "BugReports": "https://github.com/jeroen/bcrypt/issues",
+        "License": "BSD_2_clause + file LICENSE",
+        "Imports": "openssl",
+        "RoxygenNote": "6.1.1",
+        "Suggests": "spelling",
+        "Language": "en-US",
+        "Encoding": "UTF-8",
+        "NeedsCompilation": "yes",
+        "Packaged": "2024-10-03 16:15:56 UTC; jeroen",
+        "Author": "Jeroen Ooms [aut, cre] (<https://orcid.org/0000-0002-4035-0289>),\n  Damien Miller [cph] (blowfish algorithm),\n  Niels Provos [cph] (py_bcrypt code)",
+        "Maintainer": "Jeroen Ooms <jeroenooms@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-10-04 13:30:10 UTC",
+        "Built": "R 4.5.0; aarch64-apple-darwin20; 2025-04-01 12:33:31 UTC; unix",
+        "Archs": "bcrypt.so.dSYM"
       }
     },
     "bit": {
@@ -2123,6 +2178,36 @@
         "Archs": "png.so.dSYM"
       }
     },
+    "pool": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Type": "Package",
+        "Package": "pool",
+        "Title": "Object Pooling",
+        "Version": "1.0.4",
+        "Authors@R": "c(\n    person(\"Joe\", \"Cheng\", , \"joe@posit.co\", role = \"aut\"),\n    person(\"Barbara\", \"Borges\", role = \"aut\"),\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Enables the creation of object pools, which make it less\n    computationally expensive to fetch a new object. Currently the only\n    supported pooled objects are 'DBI' connections.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/rstudio/pool, https://rstudio.github.io/pool/",
+        "BugReports": "https://github.com/rstudio/pool/issues",
+        "Depends": "methods, R (>= 3.6.0)",
+        "Imports": "DBI (>= 1.2.1), later (>= 1.0.0), R6, rlang (>= 1.0.0)",
+        "Suggests": "covr, dbplyr (>= 2.4.0), dplyr, knitr, rmarkdown, RSQLite,\nshiny, testthat (>= 3.0.0), tibble",
+        "VignetteBuilder": "knitr",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.2",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-10-07 14:58:02 UTC; hadleywickham",
+        "Author": "Joe Cheng [aut],\n  Barbara Borges [aut],\n  Hadley Wickham [aut, cre],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Hadley Wickham <hadley@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-10-07 15:30:02 UTC",
+        "Built": "R 4.5.0; ; 2025-04-01 07:46:23 UTC; unix"
+      }
+    },
     "praise": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -2584,6 +2669,60 @@
         "Repository": "CRAN",
         "Date/Publication": "2024-12-14 00:10:02 UTC",
         "Built": "R 4.5.0; ; 2025-04-01 20:30:30 UTC; unix"
+      }
+    },
+    "shinyTime": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "shinyTime",
+        "Type": "Package",
+        "Title": "A Time Input Widget for Shiny",
+        "Version": "1.0.3",
+        "Authors@R": "person(\"Gerhard\", \"Burger\", email = \"burger.ga@gmail.com\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0003-1062-5576\"))",
+        "Description": "Provides a time input widget for Shiny. This widget allows intuitive time input in the\n    '[hh]:[mm]:[ss]' or '[hh]:[mm]' (24H) format by using a separate numeric input for each time\n    component. The interface with R uses date-time objects. See the project page for more\n    information and examples.",
+        "License": "GPL-3 | file LICENSE",
+        "Imports": "htmltools, shiny",
+        "URL": "https://burgerga.github.io/shinyTime/,\nhttps://github.com/burgerga/shinyTime",
+        "BugReports": "https://github.com/burgerga/shinyTime/issues",
+        "RoxygenNote": "7.2.1",
+        "Encoding": "UTF-8",
+        "Language": "en-US",
+        "Suggests": "testthat (>= 2.1.0), spelling, hms",
+        "NeedsCompilation": "no",
+        "Packaged": "2022-08-19 20:56:31 UTC; gerhard",
+        "Author": "Gerhard Burger [aut, cre] (<https://orcid.org/0000-0003-1062-5576>)",
+        "Maintainer": "Gerhard Burger <burger.ga@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2022-08-19 21:30:02 UTC",
+        "Built": "R 4.5.0; ; 2025-04-01 21:04:26 UTC; unix"
+      }
+    },
+    "shinyWidgets": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "shinyWidgets",
+        "Title": "Custom Inputs Widgets for Shiny",
+        "Version": "0.9.0",
+        "Authors@R": "c(\n  person(\"Victor\", \"Perrier\", email = \"victor.perrier@dreamrs.fr\", role = c(\"aut\", \"cre\", \"cph\")),\n  person(\"Fanny\", \"Meyer\", role = \"aut\"),\n  person(\"David\", \"Granjon\", role = \"aut\"),\n  person(\"Ian\", \"Fellows\", role = \"ctb\", comment = \"Methods for mutating vertical tabs & updateMultiInput\"),\n  person(\"Wil\", \"Davis\", role = \"ctb\", comment = \"numericRangeInput function\"),\n  person(\"Spencer\", \"Matthews\", role = \"ctb\", comment = \"autoNumeric methods\"),\n  person(family = \"JavaScript and CSS libraries authors\", role = c(\"ctb\", \"cph\"), comment = \"All authors are listed in LICENSE.md\")\n  )",
+        "Description": "Collection of custom input controls and user interface components for 'Shiny' applications. \n  Give your applications a unique and colorful style !",
+        "URL": "https://github.com/dreamRs/shinyWidgets,\nhttps://dreamrs.github.io/shinyWidgets/",
+        "BugReports": "https://github.com/dreamRs/shinyWidgets/issues",
+        "License": "GPL-3",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.3.2",
+        "Depends": "R (>= 3.1.0)",
+        "Imports": "bslib, sass, shiny (>= 1.6.0), htmltools (>= 0.5.1), jsonlite,\ngrDevices, rlang",
+        "Suggests": "testthat, covr, ggplot2, DT, scales, shinydashboard,\nshinydashboardPlus",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-02-21 09:09:48 UTC; perri",
+        "Author": "Victor Perrier [aut, cre, cph],\n  Fanny Meyer [aut],\n  David Granjon [aut],\n  Ian Fellows [ctb] (Methods for mutating vertical tabs &\n    updateMultiInput),\n  Wil Davis [ctb] (numericRangeInput function),\n  Spencer Matthews [ctb] (autoNumeric methods),\n  JavaScript and CSS libraries authors [ctb, cph] (All authors are listed\n    in LICENSE.md)",
+        "Maintainer": "Victor Perrier <victor.perrier@dreamrs.fr>",
+        "Repository": "CRAN",
+        "Date/Publication": "2025-02-21 12:30:02 UTC",
+        "Built": "R 4.5.0; ; 2025-04-01 20:40:21 UTC; unix"
       }
     },
     "sourcetools": {
@@ -3285,13 +3424,16 @@
       "checksum": "3f9a153e71e4b9b0d28b34466a108dc2"
     },
     ".Renviron": {
-      "checksum": "4bd4692158aa5fe26fe332a1b5faca0d"
+      "checksum": "d333674d44d0bcf1d2e0d4ba9be47d88"
     },
     "app.R": {
       "checksum": "81b6bbbdfab6ab9a11bae2a6c511c249"
     },
     "DESCRIPTION": {
       "checksum": "32a0b4b34d125687304c3f8f152ccb2f"
+    },
+    "R/addUpdateFishLogLine.R": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
     },
     "R/createSiteMap.R": {
       "checksum": "4576c96851e4826b944de13f43d3341a"
@@ -3302,8 +3444,17 @@
     "R/fishingReportPrompt.R": {
       "checksum": "d866a62f9dc8dea549f7df199ef29940"
     },
+    "R/fly_fishing_rivers.csv": {
+      "checksum": "7aa429512e43121f94c40a8fe3bac5dd"
+    },
+    "R/fly_fishing_species.csv": {
+      "checksum": "7db21502d03a72604f10da116a4b2231"
+    },
+    "R/fly_patterns.csv": {
+      "checksum": "909bfcad79f7fe7900a3a6d78830943a"
+    },
     "R/flyfishrApp.R": {
-      "checksum": "854798818461fdf65aebe4e44fcbf3f9"
+      "checksum": "026e75c99621be66cf905229751dc989"
     },
     "R/moduleCharts.R": {
       "checksum": "5416f345da67be57bb97320f49874a01"
@@ -3311,11 +3462,14 @@
     "R/moduleFishingReport.R": {
       "checksum": "5c70512333169c95e0e1f5463f39b290"
     },
+    "R/moduleFishLog.R": {
+      "checksum": "4af6cd3b62e273cb21d2d583488e0f24"
+    },
     "R/moduleInputControls.R": {
       "checksum": "09660a9a22fb1a7e81fe1849e08f9a26"
     },
     "R/moduleLoginControls.R": {
-      "checksum": "eade68a484743c91ea85ae5678e56ed4"
+      "checksum": "039af056774fc81efe72f57a26966716"
     },
     "R/moduleMaps.R": {
       "checksum": "cb4499ff8f39281e79d0d8d38efbe7b7"
@@ -3339,7 +3493,13 @@
       "checksum": "c716b12fbe6b2bfd303144d1e0be18f6"
     },
     "R/sendUsername.R": {
-      "checksum": "7c1b9aa9664079375780b6dd6cd49784"
+      "checksum": "41b85b4c2a3d4f228dba7eac34264782"
+    },
+    "R/weather_conditions": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "R/weather_conditions.txt": {
+      "checksum": "dded2396dd2bcc7cd37fedca2abf12e5"
     },
     "README.md": {
       "checksum": "f4220961ded5960e540b0567eab99074"
