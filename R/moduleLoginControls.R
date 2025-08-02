@@ -115,13 +115,6 @@ loginControlsServer <- function(id, pool) {
       ### If the reset token entered matches the reset token in the database,
       ### update the password
       if (input$token_submitted == reset_token()) {
-        # conn <- DBI::dbConnect(MariaDB(),
-        #                   host = Sys.getenv("DB_HOST"),
-        #                   port = Sys.getenv("DB_PORT"),
-        #                   user = Sys.getenv("DB_USER"),
-        #                   password = Sys.getenv("DB_PASSWORD"),
-        #                   dbname = Sys.getenv("DB_NAME")
-        # )
         ### Hash the password
         hashed_pw <- hashpw(input$reset_password1, salt = gensalt())
         ### Capture reset token
@@ -132,7 +125,6 @@ loginControlsServer <- function(id, pool) {
            SET PASSWORD = ?
            WHERE RESET_TOKEN = ?;",
            params = list(hashed_pw, rt))
-        # DBI::dbDisconnect(conn)
         ### Show notification saying password was updated
         showNotification("Password updated!", type = "message")
         ### Remove modal
@@ -171,20 +163,12 @@ loginControlsServer <- function(id, pool) {
       ### Authenticate credentials. If authenticated log in the user.
       if (authenticate_user(username, password)) {
         removeModal()
-        # conn <- dbConnect(MariaDB(),
-        #                   host = Sys.getenv("DB_HOST"),
-        #                   port = Sys.getenv("DB_PORT"),
-        #                   user = Sys.getenv("DB_USER"),
-        #                   password = Sys.getenv("DB_PASSWORD"),
-        #                   dbname = Sys.getenv("DB_NAME")
-        # )
         ### Capture user id entered
         user_id <- dbGetQuery(pool,
                               "SELECT USER_ID FROM ACCOUNT_INFO
                               WHERE USERNAME = ?",
                               params = list(username)
                               )[1,1]
-        # dbDisconnect(conn)
         ### Update logged_in() reactive with user id and logged in status
         logged_in(list(TRUE, user_id))
         ### Show notification saying that log in was successfull
@@ -224,13 +208,6 @@ loginControlsServer <- function(id, pool) {
       ### If the password and password confirmation that were entered match,
       ### update the database
       if (new_password1 == new_password2) {
-        # conn <- DBI::dbConnect(MariaDB(),
-        #                   host = Sys.getenv("DB_HOST"),
-        #                   port = Sys.getenv("DB_PORT"),
-        #                   user = Sys.getenv("DB_USER"),
-        #                   password = Sys.getenv("DB_PASSWORD"),
-        #                   dbname = Sys.getenv("DB_NAME")
-        # )
         ### Fetch all usernames from the database
         usernames <- as.character(dbGetQuery(pool,
                                              "SELECT USERNAME FROM ACCOUNT_INFO")[,1])
@@ -263,7 +240,6 @@ loginControlsServer <- function(id, pool) {
                       'user'
                     )
           )
-          # dbDisconnect(conn)
           ### Show notification that the account was created
           showNotification("Account created! You can now login", type = "message")
           ### Remove modal
@@ -278,13 +254,6 @@ loginControlsServer <- function(id, pool) {
 
     ### Authentication function
     authenticate_user <- function(username, password) {
-      # conn <- DBI::dbConnect(MariaDB(),
-      #                   host = Sys.getenv("DB_HOST"),
-      #                   port = Sys.getenv("DB_PORT"),
-      #                   user = Sys.getenv("DB_USER"),
-      #                   password = Sys.getenv("DB_PASSWORD"),
-      #                   dbname = Sys.getenv("DB_NAME")
-      # )
       ### Fetch all usernames from the database
       usernames <- as.character(dbGetQuery(pool,
                               "SELECT USERNAME FROM ACCOUNT_INFO")[,1])
@@ -309,7 +278,6 @@ loginControlsServer <- function(id, pool) {
       if (checkpw(password, hash)) {
         password_auth = TRUE
       }
-      # dbDisconnect(conn)
       ### Return authentication status
       return(username_auth && password_auth)
     }
