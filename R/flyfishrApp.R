@@ -21,8 +21,17 @@ flyfishrApp <- function(...) {
   library(shinyTime)
   library(DT)
   library(bcrypt)
+  library(pool)
 
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
+
+  pool <- dbPool(MariaDB(),
+                    host = Sys.getenv("DB_HOST"),
+                    port = Sys.getenv("DB_PORT"),
+                    user = Sys.getenv("DB_USER"),
+                    password = Sys.getenv("DB_PASSWORD"),
+                    dbname = Sys.getenv("DB_NAME")
+  )
 
   ui <- function(request) {
     fluidPage(
@@ -80,13 +89,18 @@ flyfishrApp <- function(...) {
     })
 
     ## Handle logging in
-    logged_in <- loginControlsServer("login")
+    logged_in <- loginControlsServer("login", pool)
 
     ## Fish log server
-    fishLogServer("fishlog", logged_in)
+    fishLogServer("fishlog", pool, logged_in)
 
     ## Update the query string
     onBookmarked(updateQueryString)
+
+    # Clean up pool when session ends
+    onStop(function() {
+      poolClose(pool)
+    })
   }
 
   shinyApp(ui, server, enableBookmarking = "url")
