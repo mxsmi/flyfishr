@@ -20,12 +20,10 @@ loginControlsServer <- function(id) {
     output$login_logout_btn <- renderUI({
       if (logged_in()[[1]]) {
         actionButton(NS(id, "logout"), "Logout",
-                     class = "btn-secondary",
-                     style = "background-color: #0EA5E9; color: black !important; border-color: #000000; border-width: 2px;")
+                     style ="background-color: #0EA5E9BF; border-color: #000000;")
       } else {
         actionButton(NS(id, "login"), "Login",
-                     class = "btn-secondary",
-                     style = "background-color: #0EA5E9; color: black !important; border-color: #000000; border-width: 2px;")
+                     style = "background-color: #0EA5E9BF; border-color: #000000;")
       }
     })
 

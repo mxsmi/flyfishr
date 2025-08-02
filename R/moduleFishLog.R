@@ -6,12 +6,15 @@ fishLogUI <- function(id) {
 fishLogServer <- function(id, logged_in) {
   moduleServer(id, function(input, output, session) {
 
+    species <- read.csv("R/fly_fishing_species.csv")
+    flies <- read.csv("R/fly_patterns.csv")
+    locations <- read.csv("R/fly_fishing_rivers.csv")
+    weather <- readLines("R/weather_conditions.txt")
+
     values <- reactiveValues(refresh_trigger = 0)
 
     fish_data <- reactive({
-
       values$refresh_trigger
-
       req(logged_in()[[1]])
       conn <- dbConnect(MariaDB(),
                         host = Sys.getenv("DB_HOST"),
@@ -36,13 +39,17 @@ fishLogServer <- function(id, logged_in) {
         "You must log in to use the fish log"
       } else {
         tagList(
-          actionButton(NS(id, "addFishLogLine"), "Add a fish to the log"),
-          br(), br(),
-          DT::dataTableOutput(NS(id, "fish_table")),
           br(),
-          actionButton(NS(id, "delete_log_line"), "Delete log line"),
+          fluidRow(
+            column(3, actionButton(NS(id, "addFishLogLine"), "Add log line", width = "100%",
+                                   style = "background-color: #0EA5E9BF; border-color: #000000;")),
+            column(3, actionButton(NS(id, "delete_log_line"), "Delete log line", width = "100%",
+                                   style = "background-color: #F87171BF; border-color: #000000;")),
+            column(3, actionButton(NS(id, "edit_log_line"), "Edit log line", width = "100%",
+                                   style = "background-color: #0EA5E9BF; border-color: #000000;"))
+          ),
           br(),
-          actionButton(NS(id, "edit_log_line"), "Edit log line")
+          DT::dataTableOutput(NS(id, "fish_table"))
         )
       }
     })
@@ -59,10 +66,6 @@ fishLogServer <- function(id, logged_in) {
 
 
     observeEvent(input$addFishLogLine, {
-      species <- read.csv("R/fly_fishing_species.csv")
-      flies <- read.csv("R/fly_patterns.csv")
-      locations <- read.csv("R/fly_fishing_rivers.csv")
-      weather <- readLines("R/weather_conditions.txt")
       showModal(modalDialog(
         title = "Enter data about your catch",
         size = "l",
@@ -80,14 +83,15 @@ fishLogServer <- function(id, logged_in) {
         numericInput(NS(id, "approx_length"), "Approximate length (inches):", value = NA),
         numericInput(NS(id, "approx_weight"), "Approximate weight (lbs):", value = NA),
         selectInput(NS(id, "fly_type"), "Fly",
-                    choices = c("Choose a fly" = "", flies$fly_name, "Other specify"),
+                    choices = c("Choose a fly" = "", flies$fly_name),
                     selectize = TRUE),
         fileInput(NS(id, "fish_photo"), "Upload Photo (optional)",
                   accept = c('.jpg', '.jpeg', '.png', '.heic', '.heif', '.webp'),
                   width = "100%"),
         "* Indicates a required field",
         footer = tagList(
-          actionButton(NS(id, "submit_log_line"), "Submit"),
+          actionButton(NS(id, "submit_log_line"), "Submit",
+                       style = "background-color: #0EA5E9BF; border-color: #000000;"),
           modalButton("Cancel")
         )
       ))
@@ -143,13 +147,12 @@ fishLogServer <- function(id, logged_in) {
 
         dbDisconnect(conn)
         values$refresh_trigger <- values$refresh_trigger + 1 %% 2
-        showNotification("Catch added to your Fish Log!")
+        showNotification("Catch added to your Fish Log!", type = "message")
         removeModal()
       }
     })
 
     observeEvent(input$delete_log_line, {
-      # print(input$fish_table_rows_selected)
       delete <- fish_data()[input$fish_table_rows_selected, ]$FISH_ID
 
       conn <- dbConnect(MariaDB(),
@@ -170,6 +173,7 @@ fishLogServer <- function(id, logged_in) {
 
       dbDisconnect(conn)
       values$refresh_trigger <- values$refresh_trigger + 1 %% 2
+      showNotification("Log line deleted", type = "message")
     })
 
     observeEvent(input$edit_log_line, {
@@ -189,7 +193,7 @@ fishLogServer <- function(id, logged_in) {
                           dbname = Sys.getenv("DB_NAME")
         )
 
-        log_line <- as.character(dbGetQuery(conn,
+        log_line <- dbGetQuery(conn,
                                "SELECT DATE_FORMAT(CATCH_DATE, '%Y-%m-%d') as CATCH_DATE,
                                TIME_FORMAT(CATCH_TIME, '%H:%i:%s') as CATCH_TIME,
                                CATCH_WATER, CATCH_STATE, WEATHER, SPECIES,
@@ -197,20 +201,22 @@ fishLogServer <- function(id, logged_in) {
                                FROM FISH_LOG
                                WHERE FISH_ID = ?;",
                                params = list(fish_id)
-                               )[1,])
+                               )[1,]
 
+        fly <- as.character(log_line$FLY)
+        print(fly)
+        log_line <- as.character(log_line)
         log_line[3] = paste(log_line[3], log_line[4], sep = ", ")
         print(log_line)
         log_line <- log_line[-4]
 
         dbDisconnect(conn)
 
-        species <- read.csv("R/fly_fishing_species.csv")
-        flies <- read.csv("R/fly_patterns.csv")
-        locations <- read.csv("R/fly_fishing_rivers.csv")
-        weather <- readLines("R/weather_conditions.txt")
-
-        print(log_line)
+        # print(log_line)
+        # print(log_line[8])
+        # print(class(log_line[8]))
+        # print(class(flies$fly_name))
+        # print(log_line[8] %in% flies$fly_name)
         showModal(modalDialog(
           title = "Update log line",
           size = "l",
@@ -230,19 +236,21 @@ fishLogServer <- function(id, logged_in) {
                       selected = log_line[5]),
           numericInput(NS(id, "approx_length"), "Approximate length (inches):", value = log_line[6]),
           numericInput(NS(id, "approx_weight"), "Approximate weight (lbs):", value = log_line[7]),
-          selectInput(NS(id, "fly_type"), "Fly",
-                      choices = c("Choose a fly" = "", flies$fly_name, "Other specify"),
-                      selectize = TRUE,
-                      selected = log_line[8]),
+          selectInput(NS(id, "fly_type"), label =  "Fly",
+                      choices = c("Choose a fly" = "", flies$fly_name),
+                      selectize = TRUE),
           fileInput(NS(id, "fish_photo"), "Upload Photo (optional)",
                     accept = c('.jpg', '.jpeg', '.png', '.heic', '.heif', '.webp'),
                     width = "100%"),
           "* Indicates a required field",
           footer = tagList(
-            actionButton(NS(id, "update_log_line"), "Update"),
+            actionButton(NS(id, "update_log_line"), "Update",
+                         style = "background-color: #0EA5E9BF; border-color: #000000;"),
             modalButton("Cancel")
           )
         ))
+
+        updateSelectInput(session, inputId = "fly_type", selected = log_line[8])
       }
 
     })
@@ -286,7 +294,7 @@ fishLogServer <- function(id, logged_in) {
         }
 
         dbExecute(conn,
-                  "UPDATE FISH_LOG
+                "UPDATE FISH_LOG
                 SET CATCH_DATE = ?, CATCH_TIME = ?, CATCH_WATER = ?, CATCH_STATE = ?,
                 WEATHER = ?, SPECIES = ?, APPROX_LENGTH = ?, APPROX_WEIGHT = ?, FLY = ?,
                 PHOTO = ?
@@ -308,7 +316,7 @@ fishLogServer <- function(id, logged_in) {
 
         dbDisconnect(conn)
         values$refresh_trigger <- values$refresh_trigger + 1 %% 2
-        showNotification("Updated the log line!")
+        showNotification("Updated the log line!", type = "message")
         removeModal()
       }
     })
