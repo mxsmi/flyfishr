@@ -11,7 +11,7 @@ fishingReportUI <- function(id) {
            br(),
            actionButton(NS(id, "generateReport"), "Generate AI fishing report",
                         class = "btn-secondary",
-                        style = "background-color: #0EA5E9; color: black !important; border-color: #000000; border-width: 2px;"
+                        style = "background-color: #0EA5E9BF; border-color: #000000;"
             ),
            br(),
            "(Uses github openai model: openai/gpt-4o)",

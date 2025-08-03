@@ -6,8 +6,8 @@ library(glue)
 library(readr)
 
 fishingReportPrompt <- function(site, date = Sys.Date(), temp, flow) {
-  path <- paste0(getwd(), "/R/prompt.txt")
-  promptText <- read_file(path)
+  # path <- paste0(getwd(), "/data/prompt.txt")
+  promptText <- read_file("data/prompt.txt")
   prompt <- glue(promptText)
   return(prompt)
 }

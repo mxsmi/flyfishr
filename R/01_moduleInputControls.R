@@ -7,7 +7,7 @@ inputControlsUI <- function(id) {
     fluidRow(
       column(1),
       column(3,
-             selectInput(NS(id, "state"), "Choose a State", choices = stateCd$STUSAB)
+             selectInput(NS(id, "state"), "1) Choose a State", choices = stateCd$STUSAB)
       ),
       column(1),
       column(1),
@@ -16,7 +16,7 @@ inputControlsUI <- function(id) {
       column(1),
       column(3,
              selectizeInput(NS(id, "site"),
-                            "Choose a USGS monitoring site for selected state",
+                            "2) Choose a USGS monitoring site for selected state",
                             choices = ""),
       )
     ),

@@ -10,10 +10,12 @@ fishLogServer <- function(id, pool, logged_in) {
 
     ### Load the files containing information about choices for species, files,
     ### locations, and weather conditions
-    species <- read.csv("R/fly_fishing_species.csv")
-    flies <- read.csv("R/fly_patterns.csv")
-    locations <- read.csv("R/fly_fishing_rivers.csv")
-    weather <- readLines("R/weather_conditions.txt")
+    species <- read.csv("data/fly_fishing_species.csv")
+    # flies <- read.csv("data/fly_patterns.csv")
+    locations <- read.csv("data/fly_fishing_rivers.csv")
+    weather <- readLines("data/weather_conditions.txt")
+    presentations <- readLines("data/presentation.txt")
+    patterns <- readLines("data/pattern.txt")
     ### Reactive value used for refreshing the Fish Log data displayed in the app
     values <- reactiveValues(refresh_trigger = 0)
 
@@ -28,9 +30,11 @@ fishLogServer <- function(id, pool, logged_in) {
       user_id <- logged_in()[[2]]
       ### Pull the fish data for the currently logged in user
       fish_log <- dbGetQuery(pool,
-                             "SELECT FISH_ID, USER_ID, CATCH_DATE, CATCH_TIME, CATCH_WATER,
-                             CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH,
-                             APPROX_WEIGHT, FLY, PHOTO
+                             "SELECT FISH_ID, USER_ID,
+                             DATE_FORMAT(CATCH_DATE, '%Y-%m-%d') as CATCH_DATE,
+                             TIME_FORMAT(CATCH_TIME, '%h:%i %p') as CATCH_TIME,
+                             CATCH_WATER, CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH,
+                             APPROX_WEIGHT, PRESENTATION, FLY_PATTERN, FLY_NAME, PHOTO
                              FROM FISH_LOG
                              WHERE USER_ID = ?;",
                              params = list(user_id))
@@ -72,7 +76,13 @@ fishLogServer <- function(id, pool, logged_in) {
                 options = list(
                   pageLength = 10,
                   scrollX = TRUE
-                )
+                ),
+                colnames = c("Date" = "CATCH_DATE", "Time" = "CATCH_TIME",
+                             "Water" = "CATCH_WATER", "State" = "CATCH_STATE", "Weather" = "WEATHER",
+                             "Species" = "SPECIES", "Length inches (Approx)" = "APPROX_LENGTH",
+                             "Weight Lbs (Approx)" = "APPROX_WEIGHT",
+                             "Presentation" = "PRESENTATION", "Pattern" = "FLY_PATTERN",
+                             "Fly" = "FLY_NAME", "Photo" = "PHOTO")
       )
     })
 
@@ -94,9 +104,16 @@ fishLogServer <- function(id, pool, logged_in) {
                     selectize = TRUE),
         numericInput(NS(id, "approx_length"), "Approximate length (inches):", value = NA),
         numericInput(NS(id, "approx_weight"), "Approximate weight (lbs):", value = NA),
-        selectInput(NS(id, "fly_type"), "Fly",
-                    choices = c("Choose a fly" = "", flies$fly_name),
+        selectInput(NS(id, "presentation"), "Presentation",
+                    choices = c("Choose a presentation" = "", presentations),
                     selectize = TRUE),
+        selectInput(NS(id, "pattern"), "Fly pattern",
+                    choices = c("Choose a fly pattern" = "", patterns),
+                    selectize = TRUE),
+        textInput(NS(id, "fly_name"), "Fly name"),
+        # selectInput(NS(id, "fly_type"), "Fly",
+        #             choices = c("Choose a fly" = "", flies$fly_name),
+        #             selectize = TRUE),
         fileInput(NS(id, "fish_photo"), "Upload Photo (optional)",
                   accept = c('.jpg', '.jpeg', '.png', '.heic', '.heif', '.webp'),
                   width = "100%"),
@@ -139,9 +156,11 @@ fishLogServer <- function(id, pool, logged_in) {
         ### Insert the data for the new log line into the database
         dbExecute(pool,
            "INSERT INTO FISH_LOG
-           (USER_ID, CATCH_DATE, CATCH_TIME, CATCH_WATER, CATCH_STATE, WEATHER,
-           SPECIES, APPROX_LENGTH, APPROX_WEIGHT, FLY, PHOTO) VALUES
-           (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+           (USER_ID, DATE_FORMAT(CATCH_DATE, '%Y-%m-%d') as CATCH_DATE,
+           TIME_FORMAT(CATCH_TIME, '%H:%i:%s') as CATCH_TIME, CATCH_WATER,
+           CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH, APPROX_WEIGHT,
+           PRESENTATION, FLY_PATTERN, FLY_NAME, PHOTO) VALUES
+           (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
                   params = list(
                     user_id,
                     input$catch_date,
@@ -152,7 +171,9 @@ fishLogServer <- function(id, pool, logged_in) {
                     input$species,
                     input$approx_length,
                     input$approx_weight,
-                    input$fly_type,
+                    input$presentation,
+                    input$pattern,
+                    input$fly_name,
                     photo_path
                   )
         )
@@ -204,14 +225,15 @@ fishLogServer <- function(id, pool, logged_in) {
                                "SELECT DATE_FORMAT(CATCH_DATE, '%Y-%m-%d') as CATCH_DATE,
                                TIME_FORMAT(CATCH_TIME, '%H:%i:%s') as CATCH_TIME,
                                CATCH_WATER, CATCH_STATE, WEATHER, SPECIES,
-                               APPROX_LENGTH, APPROX_WEIGHT, FLY, PHOTO
+                               APPROX_LENGTH, APPROX_WEIGHT, PRESENTATION,
+                               FLY_PATTERN, FLY_NAME, PHOTO
                                FROM FISH_LOG
                                WHERE FISH_ID = ?;",
                                params = list(fish_id)
                                )[1,]
         ### Capture fly as a character to use as an initally selected value in the
         ### form later
-        fly <- as.character(log_line$FLY)
+        # fly <- as.character(log_line$FLY)
         ### Convert log_line to a character vector
         log_line <- as.character(log_line)
         ### Combine water name and state together so that it has the form 'water name, state'
@@ -221,6 +243,8 @@ fishLogServer <- function(id, pool, logged_in) {
         log_line <- log_line[-4]
         ### UI form for editing the log line. Set initially selected values to the
         ### values pulled from the database for that log line
+        print(log_line[1])
+        print(log_line[2])
         showModal(modalDialog(
           title = "Update log line",
           size = "l",
@@ -240,9 +264,15 @@ fishLogServer <- function(id, pool, logged_in) {
                       selected = log_line[5]),
           numericInput(NS(id, "approx_length"), "Approximate length (inches):", value = log_line[6]),
           numericInput(NS(id, "approx_weight"), "Approximate weight (lbs):", value = log_line[7]),
-          selectInput(NS(id, "fly_type"), label =  "Fly",
-                      choices = c("Choose a fly" = "", flies$fly_name),
-                      selectize = TRUE),
+          selectInput(NS(id, "presentation"), label =  "Presentation",
+                      choices = c("Choose a fly" = "", presentations),
+                      selectize = TRUE,
+                      selected = log_line[8]),
+          selectInput(NS(id, "pattern"), label = "Fly pattern",
+                      choices = c("Choose a pattern" = "", patterns),
+                      selectize = TRUE,
+                      selected = log_line[9]),
+          textInput(NS(id, "fly_name"), "Fly name", value = log_line[10]),
           fileInput(NS(id, "fish_photo"), "Upload Photo (optional)",
                     accept = c('.jpg', '.jpeg', '.png', '.heic', '.heif', '.webp'),
                     width = "100%"),
@@ -255,7 +285,7 @@ fishLogServer <- function(id, pool, logged_in) {
         ))
         ### Update the initally selected value for fly, because for some reason the
         ### selected argument is not working
-        updateSelectInput(session, inputId = "fly_type", selected = log_line[8])
+        # updateSelectInput(session, inputId = "fly_type", selected = log_line[8])
       }
     })
 
@@ -305,8 +335,8 @@ fishLogServer <- function(id, pool, logged_in) {
         dbExecute(pool,
                 "UPDATE FISH_LOG
                 SET CATCH_DATE = ?, CATCH_TIME = ?, CATCH_WATER = ?, CATCH_STATE = ?,
-                WEATHER = ?, SPECIES = ?, APPROX_LENGTH = ?, APPROX_WEIGHT = ?, FLY = ?,
-                PHOTO = ?
+                WEATHER = ?, SPECIES = ?, APPROX_LENGTH = ?, APPROX_WEIGHT = ?,
+                PRESENTATION = ?, FLY_PATTERN = ?, FLY_NAME = ?, PHOTO = ?
                 WHERE FISH_ID = ?;",
                   params = list(
                     input$catch_date,
@@ -317,7 +347,9 @@ fishLogServer <- function(id, pool, logged_in) {
                     input$species,
                     input$approx_length,
                     input$approx_weight,
-                    input$fly_type,
+                    input$presentation,
+                    input$pattern,
+                    input$fly_name,
                     photo_path,
                     fish_id
                   )

@@ -1,31 +1,22 @@
+## Function for sending an email with a password reset token to the user when
+## they need to reset their password
 
-passwordReset <- function(reset_token, email_add) {
+passwordReset <- function(pool, reset_token, email_add) {
 
-  ## Connect to the database
-  conn <- DBI::dbConnect(RMariaDB::MariaDB(),
-                    host = Sys.getenv("DB_HOST"),
-                    port = Sys.getenv("DB_PORT"),
-                    user = Sys.getenv("DB_USER"),
-                    password = Sys.getenv("DB_PASSWORD"),
-                    dbname = Sys.getenv("DB_NAME")
-  )
-
-  ## Get email address entered by user to use in a SQL query to retrieve
-  ## the password reset token for that user
-  DBI::dbExecute(conn,
+  ### Get email address entered by user to use to fetch password reset token
+  ### for that user
+  dbExecute(pool,
              "UPDATE ACCOUNT_INFO
              SET RESET_TOKEN = ?
              WHERE EMAIL = ?;",
              params = list(reset_token, email_add))
 
-   ## Disconnect from the data base and compose password reset email
-   DBI::dbDisconnect(conn)
+   ### Compose password reset email
     message <- blastula::compose_email(
       glue::glue("You requested a password reset for your flyfishr account. Here is your
       password reset token: \n '{reset_token}'.")
     )
-
-  ## Email credentials. Use creds_envvar() to read from environment variable
+  ### Email credentials. Use creds_envvar() to read from environment variable
   gmail_creds <- blastula::creds_envvar(
     user = "flyfishrapp@gmail.com",
     pass_envvar = "GMAIL_APP_PASSWORD",
@@ -33,8 +24,7 @@ passwordReset <- function(reset_token, email_add) {
     port = 587,
     use_ssl = TRUE
   )
-
-  ## Use in smtp_send to send password rest email
+  ### Use in smtp_send to send password rest email
   blastula::smtp_send(
     email = message,
     to = email_add,

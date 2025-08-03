@@ -1,38 +1,26 @@
+## Function for sending an email to the user with their username if they forgot it
 
-sendUsername <- function(email_add) {
-  ## Connect to the database
-  conn <- DBI::dbConnect(RMariaDB::MariaDB(),
-                    host = Sys.getenv("DB_HOST"),
-                    port = Sys.getenv("DB_PORT"),
-                    user = Sys.getenv("DB_USER"),
-                    password = Sys.getenv("DB_PASSWORD"),
-                    dbname = Sys.getenv("DB_NAME")
-  )
+sendUsername <- function(pool, email_add) {
 
-  ## Get list of emails for all accounts
-  emails <- as.character(DBI::dbGetQuery(conn,
-                                    "SELECT EMAIL FROM ACCOUNT_INFO")[,1])
-
-  ## Check if inputted email is associated with existing account. If not, show a
-  ## Notification.
+  ### Fetch emails for all accounts
+  emails <- as.character(dbGetQuery(pool,
+                                    "SELECT EMAIL FROM ACCOUNT_INFO;")[,1])
+  ### Check if entered email is associated with existing account. If not, show a
+  ### Notification.
   if (!email_add %in% emails) {
     showNotification("That email is not associated with an account", type = "error")
-    DBI::dbDisconnect(conn)
   } else {
-    ## Get email address entered by user to use in a SQL query retrieve the
-    ## username associated with that email
-    user <- DBI::dbGetQuery(conn,
-                               "SELECT USERNAME FROM ACCOUNT_INFO WHERE EMAIL = ?;",
-                               params = list(email_add)
+    ### Get email address entered by user fetch username associated with that email
+    ### from the database
+    user <- dbGetQuery(pool,
+                        "SELECT USERNAME FROM ACCOUNT_INFO WHERE EMAIL = ?;",
+                        params = list(email_add)
     )[,1]
-
-    ## Disconnect from the data base and compose password reset email
-    DBI::dbDisconnect(conn)
+    ### Compose password reset email
     message <- blastula::compose_email(
       glue::glue("The username for your flyfishr account is: {user}")
     )
-
-    ## Email credentials. Use creds_envvar() to read from environment variable
+    ### Email credentials. Use creds_envvar() to read from environment variable
     gmail_creds <- blastula::creds_envvar(
       user = "flyfishrapp@gmail.com",
       pass_envvar = "GMAIL_APP_PASSWORD",
@@ -40,8 +28,7 @@ sendUsername <- function(email_add) {
       port = 587,
       use_ssl = TRUE
     )
-
-    ## Use in smtp_send to send password rest email
+    ### Use in smtp_send to send password rest email
     blastula::smtp_send(
       email = message,
       to = email_add,
@@ -49,8 +36,10 @@ sendUsername <- function(email_add) {
       subject = "Username request",
       credentials = gmail_creds
     )
+    ### Remove modal
     removeModal()
-    showNotification(glue::glue("An email containing your username was sent to {email_add}"))
+    ### Show notification that email was sent
+    showNotification(glue::glue("An email containing your username was sent to {email_add}"), type = "message")
   }
 
 }
