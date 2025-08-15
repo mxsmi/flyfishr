@@ -1,15 +1,15 @@
-### Function to generate the water temperature (F) graph
+## Function to generate the water temperature (F) graph
 
 plotWaterTemp <- function(site_no) {
 
-  ## Parameters for readNWISuv (the function that gets the data for a specific site)
+  ### Parameters for readNWISuv (the function that gets the data for a specific site)
   siteNo <- site_no
   pCode <- "00010"
   start.date <- Sys.Date() - days(5)
   end.date <- Sys.Date()
   sCode <- "00003"
 
-  ## Get site data
+  ### Get site data
   site <- readNWISuv(
     siteNumbers = siteNo,
     parameterCd = pCode,
@@ -17,7 +17,7 @@ plotWaterTemp <- function(site_no) {
     endDate = end.date
   )
 
-  ## Get mean daily value for site
+  ### Get mean daily value for site
   site_stat <- readNWISdv(
     siteNumbers = siteNo,
     parameterCd = pCode,
@@ -26,29 +26,29 @@ plotWaterTemp <- function(site_no) {
     statCd = sCode
   )
 
-  ## dataRetreival's built in clean names function
+  ### dataRetreival's built in clean names function
   site <- renameNWISColumns(site)
   site_stat <- renameNWISColumns(site_stat)
 
-  ## Convert Date column to DateTime for mean daily value data
+  ### Convert Date column to DateTime for mean daily value data
   site_stat$Date <- as_datetime(site_stat$Date)
 
-  ## Store variable info and site info attributes to label the plot with
+  ### Store variable info and site info attributes to label the plot with
   variableInfo <- attr(site, "variableInfo")
   siteInfo <- attr(site, "siteInfo")
 
-  ## Build the plot of water discharge
-  # Validate data first
+  ### Build the plot of water discharge
+  ### Validate data first
   shiny::validate(
     need(nrow(site) > 0, "No water temp data available for this river"),
     need("Wtemp_Inst" %in% names(site), "Temp data not found")
   )
 
-  ## Convert from Celsius to Fahrenheit
+  ### Convert from Celsius to Fahrenheit
   site_stat$Wtemp <- (site_stat$Wtemp * 9/5) + 32
   site$Wtemp_Inst <- (site$Wtemp_Inst * 9/5) + 32
 
-  ## Build plot
+  ### Build plot
   water_temp_plot <- ggplot(
     data = site,
     aes(dateTime, Wtemp_Inst)
@@ -71,7 +71,7 @@ plotWaterTemp <- function(site_no) {
     theme_minimal() +
     theme(axis.title = element_text(size = 14))
 
-  ## Return plot
+  ### Return plot
   water_temp_plot
 
 }

@@ -7,7 +7,8 @@ loginControlsUI <- function(id) {
       ### Button
       uiOutput(NS(id, "login_logout_btn")),
       ### Display logged in status
-      textOutput(NS(id, "login_status"))
+      textOutput(NS(id, "login_status")),
+      uiOutput(NS(id, "delete_account"))
     )
   )
 }
@@ -25,6 +26,13 @@ loginControlsServer <- function(id, pool) {
       } else {
         actionButton(NS(id, "login"), "Login",
                      style = "background-color: #0EA5E9BF; border-color: #000000;")
+      }
+    })
+
+    ### Conditionally show delete account link if user is logged in
+    output$delete_account <- renderUI({
+      if (logged_in()[[1]]) {
+        actionLink(NS(id, "delete_account_btn"), "Delete account")
       }
     })
 
@@ -73,10 +81,10 @@ loginControlsServer <- function(id, pool) {
     observeEvent(input$get_pw_reset_token, {
       ## Get the user supplied email address to pass into passwordReset function
       email_add <- input$email_for_pw_reset
-      passwordReset(reset_token(), email_add)
+      passwordReset(pool, reset_token(), email_add)
       ## Notify the user that the email has been sent, and show modal dialog
       ## to allow the user to enter the password reset token
-      showNotification("Password reset request submitted. Please check email for token",
+      showNotification("Password reset email sent. The reset token expires in one hour",
                        type = "message")
       removeModal()
       showModal(modalDialog(
@@ -152,7 +160,7 @@ loginControlsServer <- function(id, pool) {
     ### When the user enters their email address, send them their username
     observeEvent(input$request_username, {
       email_add <- input$email_for_forgot_username
-      sendUsername(email_add)
+      sendUsername(pool, email_add)
     })
 
     ### Handle login attempt
@@ -166,7 +174,7 @@ loginControlsServer <- function(id, pool) {
         ### Capture user id entered
         user_id <- dbGetQuery(pool,
                               "SELECT USER_ID FROM ACCOUNT_INFO
-                              WHERE USERNAME = ?",
+                              WHERE USERNAME = ?;",
                               params = list(username)
                               )[1,1]
         ### Update logged_in() reactive with user id and logged in status
@@ -187,7 +195,7 @@ loginControlsServer <- function(id, pool) {
         div(
           textInput(NS(id, "new_username"), "Username:", placeholder = "Pick a username"),
           passwordInput(NS(id, "new_password1"), "Password:", placeholder = "Pick a password"),
-          passwordInput(NS(id, "new_password2"), "Re-enter password:", placeholder = "Confirm password"),
+          passwordInput(NS(id, "new_password2"), "Confirm password:", placeholder = "Confirm password"),
           textInput(NS(id, "email"), "Email:", placeholder = "Enter email addresss")
         ),
         footer = tagList(
@@ -199,56 +207,66 @@ loginControlsServer <- function(id, pool) {
 
     ### Check new credentials
     observeEvent(input$submit_new_credentials, {
-      ### Capture the username, password, password confirmation, and email for
-      ### a new account
-      new_username <- input$new_username
-      new_password1 <- input$new_password1
-      new_password2 <- input$new_password2
-      new_email <- as.character(input$email)
-      ### If the password and password confirmation that were entered match,
-      ### update the database
-      if (new_password1 == new_password2) {
-        ### Fetch all usernames from the database
-        usernames <- as.character(dbGetQuery(pool,
-                                             "SELECT USERNAME FROM ACCOUNT_INFO")[,1])
-        ### Fetch all emails from the database
-        emails <- as.character(DBI::dbGetQuery(conn,
-                             "SELECT EMAIL FROM ACCOUNT_INFO")[,1])
-        ### If the username entered matches the username for an existing account,
-        ### show notification that the username is already taken
-        if (new_username %in% usernames) {
-          showNotification("That username is already taken. Please choose another one",
-                           type = "error")
-        ### If the email entered matches the email for an existing account,
-        ### show notification that the email is already associated with an account
-        } else if (new_email %in% emails) {
-          showNotification("There is already an account for that email", type = "error")
-        ### If the username and email entered are available, create the new account
-        } else {
-          ### Hash the password entered
-          hashed_pw <- bcrypt::hashpw(new_password1, salt = gensalt())
-          ### Insert account information into the database
-          dbExecute(pool,
+      ### If any of the required fields for account creation are not filled out,
+      ### show an error message.
+      if (input$new_username == "") {
+        showNotification("Username is required", type = "error")
+      } else if (input$new_password1 == "" | input$new_password2 == "") {
+        showNotification("You must fill out both the Password and Confirm Password fields", type = "error")
+      } else if (input$email == "") {
+        showNotification("Email is required", type = "error")
+      } else {
+        ### Capture the username, password, password confirmation, and email for
+        ### a new account
+        new_username <- input$new_username
+        new_password1 <- input$new_password1
+        new_password2 <- input$new_password2
+        new_email <- as.character(input$email)
+        ### If the password and password confirmation that were entered match,
+        ### update the database
+        if (new_password1 == new_password2) {
+          ### Fetch all usernames from the database
+          usernames <- as.character(dbGetQuery(pool,
+                                               "SELECT USERNAME FROM ACCOUNT_INFO;")[,1])
+          ### Fetch all emails from the database
+          emails <- as.character(dbGetQuery(pool,
+                                            "SELECT EMAIL FROM ACCOUNT_INFO;")[,1])
+          ### If the username entered matches the username for an existing account,
+          ### show notification that the username is already taken
+          if (new_username %in% usernames) {
+            showNotification("That username is already taken. Please choose another one",
+                             type = "error")
+            ### If the email entered matches the email for an existing account,
+            ### show notification that the email is already associated with an account
+          } else if (new_email %in% emails) {
+            showNotification("There is already an account for that email", type = "error")
+            ### If the username and email entered are available, create the new account
+          } else {
+            ### Hash the password entered
+            hashed_pw <- bcrypt::hashpw(new_password1, salt = gensalt())
+            ### Insert account information into the database
+            dbExecute(pool,
                       "INSERT INTO ACCOUNT_INFO
                       (USERNAME, PASSWORD, EMAIL, DATE_CREATED, ACCESS)
-                      VALUES (?, ?, ?, ?, ?)",
+                      VALUES (?, ?, ?, ?, ?);",
                       params = list(
-                      new_username,
-                      hashed_pw,
-                      new_email,
-                      as.character(Sys.Date()),
-                      'user'
-                    )
-          )
-          ### Show notification that the account was created
-          showNotification("Account created! You can now login", type = "message")
-          ### Remove modal
-          removeModal()
+                        new_username,
+                        hashed_pw,
+                        new_email,
+                        as.character(Sys.Date()),
+                        'user'
+                      )
+            )
+            ### Show notification that the account was created
+            showNotification("Account created! You can now login", type = "message")
+            ### Remove modal
+            removeModal()
+          }
+          ### If the password and the password confirmation that were entered do not
+          ### match, show notification
+        } else {
+          showNotification("Password entries do not match", type = "error")
         }
-      ### If the password and the password confirmation that were entered do not
-      ### match, show notification
-      } else {
-        showNotification("Password entries do not match", type = "error")
       }
     })
 
@@ -256,10 +274,10 @@ loginControlsServer <- function(id, pool) {
     authenticate_user <- function(username, password) {
       ### Fetch all usernames from the database
       usernames <- as.character(dbGetQuery(pool,
-                              "SELECT USERNAME FROM ACCOUNT_INFO")[,1])
+                              "SELECT USERNAME FROM ACCOUNT_INFO;")[,1])
       ### Fetch all passwords from the database
       passwords <- as.character(dbGetQuery(pool,
-                              "SELECT PASSWORD FROM ACCOUNT_INFO")[,1])
+                              "SELECT PASSWORD FROM ACCOUNT_INFO;")[,1])
       ### Fetch the hash for the password
       hash <- as.character(dbGetQuery(pool,
                                            "SELECT PASSWORD FROM ACCOUNT_INFO
@@ -295,6 +313,44 @@ loginControlsServer <- function(id, pool) {
     observeEvent(input$logout, {
       logged_in(list(FALSE, NULL))
     })
+
+    ### Show modal asking user if they are sure they want to delete their account
+    observeEvent(input$delete_account_btn, {
+      showModal(modalDialog(
+        title = "Are you sure you want to delete your account?",
+        "Deleting your account will remove all of your account information and Fish Log data.
+        This action cannot be undone.",
+        footer = tagList(
+          actionButton(NS(id, "confirm_delete_account"), "Yes, delete my account",
+                       style = "background-color: #F87171BF; border-color: #000000;"),
+          modalButton("cancel")
+        )
+      ))
+    })
+
+    ### Handle deletion of account
+    observeEvent(input$confirm_delete_account, {
+      ### Capture user id
+      user_id <- logged_in()[[2]]
+      ### Delete data from FISH_LOG table for that user id
+      dbExecute(pool,
+                "DELETE FROM FISH_LOG
+                WHERE USER_ID = ?;",
+                params = list(user_id)
+                )
+      ### Delete data from ACCOUNT_INFO table for that user id
+      dbExecute(pool,
+                "DELETE FROM ACCOUNT_INFO
+                WHERE USER_ID = ?;",
+                params = list(user_id)
+                )
+      ### Log them out of the app
+      logged_in(list(FALSE, NULL))
+      removeModal()
+      ### Show notification that account has been deleted
+      showNotification("You account has been deleted and you have been logged out.", type = "message")
+    })
+
     ### Return logged_in() reactive so that it can be used in other module
     return(reactive({
       logged_in()
