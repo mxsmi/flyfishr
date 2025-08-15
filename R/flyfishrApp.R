@@ -1,11 +1,12 @@
-### This file contains a function called flyfishrApp which runs the app locally
-### from the flyfishr package. The app is a data dashboard for fly fishermen to
-### view a map, current water levels, and get an AI generated fishing report.
+## This file contains a function called flyfishrApp which runs the app locally
+## from the flyfishr package. The app is a data dashboard for fly fishermen to
+## view a map, current water levels, get an AI generated fishing report, and
+## maintain a Fish Log of their catches.
 
-## Define 'flyfishrApp' function
+### Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
 
-  ## Load required libraries
+  ### Load required libraries
   library(shiny)
   library(dataRetrieval)
   library(ggplot2)
@@ -23,9 +24,9 @@ flyfishrApp <- function(...) {
   library(bcrypt)
   library(pool)
   library(RMariaDB)
-
+  ### Set theme
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
-
+  ### Set pool of database connections
   pool <- dbPool(MariaDB(),
                     host = Sys.getenv("DB_HOST"),
                     port = Sys.getenv("DB_PORT"),
@@ -36,13 +37,14 @@ flyfishrApp <- function(...) {
 
   ui <- function(request) {
     fluidPage(
+      ### Update theme
       theme = bslib::bs_theme_update(theme = base_theme,
                                      primary = "#337ab7",
                                      bg = "#FFFFFF",
                                      fg = "#000000"
       ),
       waiter::use_waiter(),
-      ## Title panel
+      ### Title panel
       fluidRow(
         column(8,
           h1("Flyfishr")
@@ -54,7 +56,7 @@ flyfishrApp <- function(...) {
 
       inputControlsUI("controls"),
 
-      ## Modules for the Map, Flow/Temp graphs, and fly-fishing report
+      ### Modules for the Map, Flow/Temp graphs, and fly-fishing report
       tabsetPanel(
         tabPanel("Map", mapUI("map")),
         tabPanel("Flows & Temperature", chartsUI("charts")),
@@ -66,39 +68,39 @@ flyfishrApp <- function(...) {
 
   server <- function(input, output, session) {
 
-    ## Get water USGS data once a state is selected
+    ### Get water USGS sites data once a state is selected
     search_data <- inputControlsServer("controls")
 
-    ## Get discharge and water temperature data once a site is selected
+    ### Get discharge and water temperature data once a site is selected
     water_data <- waterDataServer(id = "data",
                                   sites = search_data$sites,
                                   selected_site = search_data$selected_site)
 
-    ## Create discharge and water temperature plots
+    ### Create discharge and water temperature plots
     chartsServer("charts", water_data)
 
-    ## Create Map
+    ### Create Map
     mapServer("map", water_data)
 
-    ## Create fly-fishing report
+    ### Create fly-fishing report
     fishingReportServer("report", search_data$selected_site, water_data)
 
-    ## Automatically bookmark every time an input changes
+    ### Automatically bookmark every time an input changes
     observe({
       reactiveValuesToList(input)
       session$doBookmark()
     })
 
-    ## Handle logging in
+    ### Handle logging in
     logged_in <- loginControlsServer("login", pool)
 
-    ## Fish log server
+    ### Fish log server
     fishLogServer("fishlog", pool, logged_in)
 
-    ## Update the query string
+    ### Update the query string
     onBookmarked(updateQueryString)
 
-    # Clean up pool when session ends
+    ### Clean up pool when session ends
     onStop(function() {
       poolClose(pool)
     })

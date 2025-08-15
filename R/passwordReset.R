@@ -7,14 +7,14 @@ passwordReset <- function(pool, reset_token, email_add) {
   ### for that user
   dbExecute(pool,
              "UPDATE ACCOUNT_INFO
-             SET RESET_TOKEN = ?
+             SET RESET_TOKEN = ?, RT_EXPIRATION = ?
              WHERE EMAIL = ?;",
-             params = list(reset_token, email_add))
+             params = list(reset_token, Sys.time() + hours(1), email_add))
 
    ### Compose password reset email
     message <- blastula::compose_email(
       glue::glue("You requested a password reset for your flyfishr account. Here is your
-      password reset token: \n '{reset_token}'.")
+      password reset token: \n '{reset_token}'. It is valid for one hour.")
     )
   ### Email credentials. Use creds_envvar() to read from environment variable
   gmail_creds <- blastula::creds_envvar(
@@ -32,4 +32,5 @@ passwordReset <- function(pool, reset_token, email_add) {
     subject = "Password Reset",
     credentials = gmail_creds
   )
+
 }

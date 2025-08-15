@@ -1,5 +1,5 @@
-### Module that defines the UI for displaying the map of the currently selected
-### site, and the associated server function
+## Module that defines the UI for displaying the map of the currently selected
+## site, and the associated server function
 
 mapUI <- function(id) {
   leafletOutput(NS(id, "siteMap"))

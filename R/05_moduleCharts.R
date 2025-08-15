@@ -1,5 +1,5 @@
-### Module that defines UI for displaying discharge and water temperature graphs
-### for the currently selected site
+## Module that defines UI for displaying discharge and water temperature graphs
+## for the currently selected site
 
 chartsUI <- function(id) {
   tagList(

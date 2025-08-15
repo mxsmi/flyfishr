@@ -84,7 +84,7 @@ loginControlsServer <- function(id, pool) {
       passwordReset(pool, reset_token(), email_add)
       ## Notify the user that the email has been sent, and show modal dialog
       ## to allow the user to enter the password reset token
-      showNotification("Password reset request submitted. Please check email for token",
+      showNotification("Password reset email sent. The reset token expires in one hour",
                        type = "message")
       removeModal()
       showModal(modalDialog(
