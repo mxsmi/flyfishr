@@ -3424,82 +3424,88 @@
       "checksum": "3f9a153e71e4b9b0d28b34466a108dc2"
     },
     ".Renviron": {
-      "checksum": "d333674d44d0bcf1d2e0d4ba9be47d88"
+      "checksum": "f7b51f54f8a95f9f59ace6c397e50118"
     },
     "app.R": {
       "checksum": "81b6bbbdfab6ab9a11bae2a6c511c249"
     },
+    "data/fly_fishing_rivers.csv": {
+      "checksum": "7aa429512e43121f94c40a8fe3bac5dd"
+    },
+    "data/fly_fishing_species.csv": {
+      "checksum": "7db21502d03a72604f10da116a4b2231"
+    },
+    "data/fly_patterns.csv": {
+      "checksum": "909bfcad79f7fe7900a3a6d78830943a"
+    },
+    "data/length_units.txt": {
+      "checksum": "bfeac1ecd13d9ffdc04c1c1064e88d88"
+    },
+    "data/pattern.txt": {
+      "checksum": "b8086b4cf18d2ac40efa9c8d07e7fc18"
+    },
+    "data/presentation.txt": {
+      "checksum": "aad3ecf0065c72e13d4c5f4888df02fb"
+    },
+    "data/prompt.txt": {
+      "checksum": "021ddf149fd0b287ea585a9d825bd477"
+    },
+    "data/promptParameters.txt": {
+      "checksum": "c716b12fbe6b2bfd303144d1e0be18f6"
+    },
+    "data/weather_conditions.txt": {
+      "checksum": "dded2396dd2bcc7cd37fedca2abf12e5"
+    },
+    "data/weight_units.txt": {
+      "checksum": "5b0cf884c1c30f4b5e066debfcc4a3d8"
+    },
     "DESCRIPTION": {
       "checksum": "32a0b4b34d125687304c3f8f152ccb2f"
     },
-    "R/addUpdateFishLogLine.R": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    "R/01_moduleInputControls.R": {
+      "checksum": "cff8a3b017bbd9a4952279438a8b90f2"
+    },
+    "R/02_moduleLoginControls.R": {
+      "checksum": "e42c39c4fb92a30536cf55a7924f32af"
+    },
+    "R/03_moduleWaterData.R": {
+      "checksum": "73ef34d7eacb799b46fb1a059db46930"
+    },
+    "R/04_moduleMaps.R": {
+      "checksum": "a33665380a484b20fccefe6a0dd287e4"
+    },
+    "R/05_moduleCharts.R": {
+      "checksum": "cdd71a138a25f88e43517564cf5bfa42"
+    },
+    "R/06_moduleFishingReport.R": {
+      "checksum": "bcd5c24af71c40335664fabe81757556"
+    },
+    "R/07_moduleFishLog.R": {
+      "checksum": "abeade2dce889bf7c4ba991ea01e52ff"
     },
     "R/createSiteMap.R": {
-      "checksum": "4576c96851e4826b944de13f43d3341a"
+      "checksum": "b7b8273230cfb956d038408c22563c40"
     },
     "R/dischargeDataAvailable.R": {
-      "checksum": "c4d9d384e2a0df713fea945d72882b41"
+      "checksum": "e7f7beeeb3927f184ba95f5a9326bd1e"
     },
     "R/fishingReportPrompt.R": {
-      "checksum": "d866a62f9dc8dea549f7df199ef29940"
-    },
-    "R/fly_fishing_rivers.csv": {
-      "checksum": "7aa429512e43121f94c40a8fe3bac5dd"
-    },
-    "R/fly_fishing_species.csv": {
-      "checksum": "7db21502d03a72604f10da116a4b2231"
-    },
-    "R/fly_patterns.csv": {
-      "checksum": "909bfcad79f7fe7900a3a6d78830943a"
+      "checksum": "1dffaff96eb05ee990cb1aa3bf76930e"
     },
     "R/flyfishrApp.R": {
-      "checksum": "8d71bd46b5c0d818359fcf7ca15e1436"
-    },
-    "R/moduleCharts.R": {
-      "checksum": "5416f345da67be57bb97320f49874a01"
-    },
-    "R/moduleFishingReport.R": {
-      "checksum": "5c70512333169c95e0e1f5463f39b290"
-    },
-    "R/moduleFishLog.R": {
-      "checksum": "a9c84bc54bc24b8e652e5fc9367edf2e"
-    },
-    "R/moduleInputControls.R": {
-      "checksum": "09660a9a22fb1a7e81fe1849e08f9a26"
-    },
-    "R/moduleLoginControls.R": {
-      "checksum": "92fb3d075a11ea9d87cec09a89817645"
-    },
-    "R/moduleMaps.R": {
-      "checksum": "cb4499ff8f39281e79d0d8d38efbe7b7"
-    },
-    "R/moduleWaterData.R": {
-      "checksum": "dfda0b6e8828c0a99dd148762c46f1f2"
+      "checksum": "a12c4bc2457f2ced22b8231a3901c642"
     },
     "R/passwordReset.R": {
-      "checksum": "5e5660a70eae81d47a4f00a0d15e9f66"
+      "checksum": "a8ac6df71bcf7a4e4fc58732fee76b48"
     },
     "R/plotDischarge.R": {
-      "checksum": "0dc8e48cd4e6c4f699e733594cbbffd5"
+      "checksum": "b77d40da88bc3bf12d9de6ce178f7ab8"
     },
     "R/plotWaterTemp.R": {
-      "checksum": "893c49dfc42db8b8e8c8dc37417dcc82"
-    },
-    "R/prompt.txt": {
-      "checksum": "021ddf149fd0b287ea585a9d825bd477"
-    },
-    "R/promptParameters.txt": {
-      "checksum": "c716b12fbe6b2bfd303144d1e0be18f6"
+      "checksum": "c01ee57d0098e8db2398fdb5c545a096"
     },
     "R/sendUsername.R": {
-      "checksum": "41b85b4c2a3d4f228dba7eac34264782"
-    },
-    "R/weather_conditions": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
-    },
-    "R/weather_conditions.txt": {
-      "checksum": "dded2396dd2bcc7cd37fedca2abf12e5"
+      "checksum": "049b13da6bafdc1c9d7d608d6cf1c2a4"
     },
     "README.md": {
       "checksum": "f4220961ded5960e540b0567eab99074"
