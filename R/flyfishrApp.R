@@ -32,7 +32,8 @@ flyfishrApp <- function(...) {
                  port = Sys.getenv("SUPABASE_DB_PORT"),
                  dbname = Sys.getenv("SUPABASE_DB_NAME"),
                  user = Sys.getenv("SUPABASE_DB_USER"),
-                 password = Sys.getenv("SUPABASE_PW")
+                 password = Sys.getenv("SUPABASE_PW"),
+                 sslmode = Sys.getenv("SUPABASE_DB_SSL")
   )
 
   ui <- function(request) {

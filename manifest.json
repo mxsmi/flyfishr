@@ -3462,7 +3462,7 @@
       "checksum": "3f9a153e71e4b9b0d28b34466a108dc2"
     },
     ".Renviron": {
-      "checksum": "c5dfa5e93ce6ae42077dd9025ac9f193"
+      "checksum": "e70441c9fac2ffc7886de44b6097ef88"
     },
     "app.R": {
       "checksum": "81b6bbbdfab6ab9a11bae2a6c511c249"
@@ -3531,7 +3531,7 @@
       "checksum": "1dffaff96eb05ee990cb1aa3bf76930e"
     },
     "R/flyfishrApp.R": {
-      "checksum": "b1b795c1176b1e9b0a2137e318a88f10"
+      "checksum": "183a59f51d170f1437cc42a015ca595e"
     },
     "R/passwordReset.R": {
       "checksum": "a8ac6df71bcf7a4e4fc58732fee76b48"
