@@ -104,7 +104,7 @@ flyfishrApp <- function(...) {
 
     ### Clean up pool when session ends
     onStop(function() {
-      poolClose(pool)
+      try(poolClose(pool), silent = TRUE)
     })
   }
 
