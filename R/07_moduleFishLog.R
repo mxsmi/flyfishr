@@ -8,6 +8,38 @@ fishLogUI <- function(id) {
 fishLogServer <- function(id, pool, logged_in) {
   moduleServer(id, function(input, output, session) {
 
+    ## Function to create photo HTML
+    create_photo_html <- function(photo_data, photo_filename, fish_id) {
+      if (is.null(photo_data) || photo_data == "" || is.na(photo_data)) {
+        return(NA)
+      } else {
+        result <- paste0('<img src="data:',
+               get_mime_type(photo_filename),
+               ';base64,', photo_data,
+               '" height="80" width="80" style="object-fit: cover; border-radius: 5px; cursor: pointer;" ',
+               'onclick="Shiny.setInputValue(\'photo_click\', \'',
+               fish_id,
+               '\', {priority: \'event\'})">')
+        return(result)
+      }
+    }
+
+    ## Function to get MIME type from filename
+    get_mime_type <- function(filename) {
+      if (is.na(filename) || is.null(filename)) return("image/jpeg")
+
+      ext <- tolower(tools::file_ext(filename))
+      switch(ext,
+             "jpg" = "image/jpeg",
+             "jpeg" = "image/jpeg",
+             "png" = "image/png",
+             "gif" = "image/gif",
+             "webp" = "image/webp",
+             "bmp" = "image/bmp",
+             "image/jpeg"  # default fallback
+      )
+    }
+
     ### Load the files containing information about choices for species, files,
     ### locations, and weather conditions
     species <- read.csv("data/fly_fishing_species.csv")
@@ -31,14 +63,13 @@ fishLogServer <- function(id, pool, logged_in) {
       user_id <- logged_in()[[2]]
       ### Pull the fish data for the currently logged in user
       fish_log <- dbGetQuery(pool,
-                             "SELECT FISH_ID, USER_ID,
-                             DATE_FORMAT(CATCH_DATE, '%Y-%m-%d') as CATCH_DATE,
-                             TIME_FORMAT(CATCH_TIME, '%h:%i %p') as CATCH_TIME,
-                             CATCH_WATER, CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH,
-                             LENGTH_UNITS, APPROX_WEIGHT, WEIGHT_UNITS, PRESENTATION,
-                             FLY_PATTERN, FLY_NAME, PHOTO_DATA, NOTES FROM FISH_LOG
-                             WHERE USER_ID = ?;",
-                             params = list(user_id))
+                       "SELECT FISH_ID, USER_ID, CATCH_DATE, CATCH_TIME,
+                       CATCH_WATER, CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH,
+                       LENGTH_UNITS, APPROX_WEIGHT, WEIGHT_UNITS, PRESENTATION,
+                       FLY_PATTERN, FLY_NAME, PHOTO_DATA, NOTES FROM FISH_LOG
+                       WHERE USER_ID = $1
+                       ORDER BY FISH_ID;",
+                       params = list(user_id))
       ### Return the fish data for the currently logged in user
       fish_log
     })
@@ -68,87 +99,55 @@ fishLogServer <- function(id, pool, logged_in) {
       }
     })
 
-    # Function to get MIME type from filename
-    get_mime_type <- function(filename) {
-      if (is.na(filename) || is.null(filename)) return("image/jpeg")
-
-      ext <- tolower(tools::file_ext(filename))
-      switch(ext,
-             "jpg" = "image/jpeg",
-             "jpeg" = "image/jpeg",
-             "png" = "image/png",
-             "gif" = "image/gif",
-             "webp" = "image/webp",
-             "bmp" = "image/bmp",
-             "image/jpeg"  # default fallback
-      )
-    }
-
     output$fish_table <- DT::renderDataTable({
-      data <- fish_data()[,3:ncol(fish_data())]
+      ## Get data from reactive excluding only USER_ID (column 2)
+      data <- fish_data()[, -2]  # Remove only USER_ID, keep FISH_ID
 
-      # Create photo column with proper MIME type detection
-      data$PHOTO <- ifelse(
-        is.na(data$PHOTO_DATA) | data$PHOTO_DATA == "",
-        "No photo",
-        paste0('<img src="data:',
-               get_mime_type(data$PHOTO_FILENAME),  # Use filename to detect type
-               ';base64,', data$PHOTO_DATA,
-               '" height="80" width="80" style="object-fit: cover; border-radius: 5px; cursor: pointer;" ',
-               'onclick="Shiny.setInputValue(\'photo_click\', \'',
-               # You'll need to access the FISH_ID from the original data
-               fish_data()$FISH_ID[3:nrow(fish_data())],  # Adjust this based on your data structure
-               '\', {priority: \'event\'})">')
-      )
+      # Check if data has rows before processing
+      if(nrow(data) > 0) {
 
-      # Remove PHOTO_DATA and PHOTO_FILENAME from display
-      display_data <- data[, !names(data) %in% c("PHOTO_DATA", "PHOTO_FILENAME")]
+        # Remove PHOTO_DATA, PHOTO_FILENAME, and FISH_ID from display
+        display_data <- data[, !names(data) %in% c("photo_data", "fish_id")]
 
+        # Get photo column index safely
+        photo_col_index <- which(names(display_data) == "photo_html")
+        column_defs <- if(length(photo_col_index) > 0) {
+          list(list(targets = photo_col_index - 1, orderable = FALSE, width = "100px"))
+        } else {
+          list()
+        }
+
+        # Create column names only for columns that exist
+        available_cols <- names(display_data)
+        col_rename <- c("Date" = "CATCH_DATE", "Time" = "CATCH_TIME",
+                        "Water" = "CATCH_WATER", "State" = "CATCH_STATE", "Weather" = "WEATHER",
+                        "Species" = "SPECIES", "Length (Approx)" = "APPROX_LENGTH",
+                        "Length units" = "LENGTH_UNITS", "Weight (Approx)" = "APPROX_WEIGHT",
+                        "Weight units" = "WEIGHT_UNITS", "Presentation" = "PRESENTATION",
+                        "Pattern" = "FLY_PATTERN", "Fly" = "FLY_NAME", "Photo" = "PHOTO_HTML", "Notes" = "NOTES")
+
+        # Only keep renames for columns that actually exist
+        col_rename <- col_rename[col_rename %in% available_cols]
+
+      } else {
+        # Handle empty data case
+        display_data <- data.frame()
+        column_defs <- list()
+        col_rename <- NULL
+      }
+
+      # Create datatable (works with empty data)
       datatable(display_data,
-                escape = FALSE,  # Critical for HTML rendering
+                escape = FALSE,
+                rownames = FALSE,
                 options = list(
                   pageLength = 10,
                   scrollX = TRUE,
-                  columnDefs = list(
-                    list(targets = which(names(display_data) == "PHOTO") - 1,
-                         orderable = FALSE, width = "100px")
-                  )
+                  columnDefs = column_defs
                 ),
-                colnames = c("Date" = "CATCH_DATE", "Time" = "CATCH_TIME",
-                             "Water" = "CATCH_WATER", "State" = "CATCH_STATE", "Weather" = "WEATHER",
-                             "Species" = "SPECIES", "Length (Approx)" = "APPROX_LENGTH",
-                             "Length units" = "LENGTH_UNITS", "Weight (Approx)" = "APPROX_WEIGHT",
-                             "Weight units" = "WEIGHT_UNITS", "Presentation" = "PRESENTATION",
-                             "Pattern" = "FLY_PATTERN", "Fly" = "FLY_NAME", "Photo" = "PHOTO", "Notes" = "NOTES")
+                colnames = col_rename  # Now conditional
       )
     })
-
-    # ### Server code for rendering Fish Log datatable
-    # output$fish_table <- DT::renderDT({
-    #   ### Cast fish_data() reactive as a datatable. Select only the columns other
-    #   ### than the first two (FISH_ID and USER_ID).
-    #   data <- fish_data()[,3:length(fish_data())]
-    #   data$PHOTO <- ifelse(
-    #     is.na(data$PHOTO_DATA) | data$PHOTO_DATA == "",
-    #     "No photo",
-    #     paste0('<img src="data:image/png;base64,', data$PHOTO_DATA,
-    #            '" height="80" width="80" style="object-fit: cover; border-radius: 5px; cursor: pointer;" ',
-    #            'onclick="Shiny.setInputValue(\'photo_click\', \'', data$LOG_ID, '\', {priority: \'event\'})">')
-    #   )
-    #   datatable(data,
-    #             escape = FALSE,  # Allows HTML links to work
-    #             options = list(
-    #               pageLength = 10,
-    #               scrollX = TRUE
-    #             ),
-    #             colnames = c("Date" = "CATCH_DATE", "Time" = "CATCH_TIME",
-    #                          "Water" = "CATCH_WATER", "State" = "CATCH_STATE", "Weather" = "WEATHER",
-    #                          "Species" = "SPECIES", "Length (Approx)" = "APPROX_LENGTH",
-    #                          "Length units" = "LENGTH_UNITS", "Weight (Approx)" = "APPROX_WEIGHT",
-    #                          "Weight units" = "WEIGHT_UNITS", "Presentation" = "PRESENTATION",
-    #                          "Pattern" = "FLY_PATTERN", "Fly" = "FLY_NAME", "Photo" = "PHOTO")
-    #   )
-    # })
 
     ### Show modal for user to enter data for a new log line
     observeEvent(input$addFishLogLine, {
@@ -188,8 +187,6 @@ fishLogServer <- function(id, pool, logged_in) {
                  )
           )
         ),
-        # numericInput(NS(id, "approx_length"), "Approximate length:", value = NA),
-        # numericInput(NS(id, "approx_weight"), "Approximate weight:", value = NA),
         selectInput(NS(id, "presentation"), "Presentation",
                     choices = c("Choose a presentation" = "", presentations),
                     selectize = TRUE),
@@ -241,7 +238,9 @@ fishLogServer <- function(id, pool, logged_in) {
         ### Extract photo file name and photo data to insert into database if available
         photo_filename <- NA
         photo_data <- NA
+        photo_html <- NA
         if (!is.null(input$fish_photo)) {
+
           # Read and encode photo
           file_content <- readBin(input$fish_photo$datapath, "raw",
                                   file.info(input$fish_photo$datapath)$size)
@@ -249,31 +248,43 @@ fishLogServer <- function(id, pool, logged_in) {
           photo_filename <- input$fish_photo$name
         }
 
-        ### Insert the data for the new log line into the database
-        dbExecute(pool,
-           "INSERT INTO FISH_LOG
-           (USER_ID, CATCH_DATE, CATCH_TIME, CATCH_WATER,
-           CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH, APPROX_WEIGHT,
-           PRESENTATION, FLY_PATTERN, FLY_NAME, PHOTO_FILENAME, PHOTO_DATA, NOTES) VALUES
-           (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                  params = list(
-                    user_id,
-                    input$catch_date,
-                    input$catch_time,
-                    catch_water,
-                    catch_state,
-                    input$weather_conditions,
-                    input$species,
-                    input$approx_length,
-                    input$approx_weight,
-                    input$presentation,
-                    input$pattern,
-                    input$fly_name,
-                    photo_filename,
-                    photo_data,
-                    input$fish_notes
-                  )
-        )
+        if (input$catch_time == "") {
+          catch_time = NA
+        } else {
+          catch_time = input$catch_time
+        }
+
+        # Get a dedicated connection for the insert
+        conn1 <- poolCheckout(pool)
+        query_result <- dbGetQuery(conn1,
+        "INSERT INTO FISH_LOG
+        (USER_ID, CATCH_DATE, CATCH_TIME, CATCH_WATER,
+        CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH, LENGTH_UNITS, APPROX_WEIGHT,
+        WEIGHT_UNITS, PRESENTATION, FLY_PATTERN, FLY_NAME, PHOTO_FILENAME, PHOTO_DATA, NOTES)
+        VALUES
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        RETURNING FISH_ID;",
+        params = list(
+        user_id, input$catch_date, catch_time, catch_water,
+        catch_state, input$weather_conditions, input$species,
+        input$approx_length, input$length_units, input$approx_weight, input$weight_units,
+        input$presentation, input$pattern, input$fly_name, photo_filename, photo_data,
+        input$fish_notes
+      ))
+        new_fish_id <- as.integer(query_result$fish_id[1])
+
+        # Return the first connection immediately
+        poolReturn(conn1)
+
+        # Create the photo HTML
+        photo_html <- create_photo_html(photo_data, photo_filename, new_fish_id)
+
+        # Get a fresh connection for the update
+        conn2 <- poolCheckout(pool)
+        dbExecute(conn2, "UPDATE FISH_LOG SET PHOTO_HTML = $1 WHERE FISH_ID = $2;",
+                  params = list(photo_html, new_fish_id))
+        poolReturn(conn2)
+
         ### Activate the refresh trigger to update the reactive fish_data() containing
         ### the rows to be displayed in the Fish_Log UI
         values$refresh_trigger <- values$refresh_trigger + 1 %% 2
@@ -287,14 +298,14 @@ fishLogServer <- function(id, pool, logged_in) {
     ### Delete currently selected log line(s)
     observeEvent(input$delete_log_line, {
       ### Pull out the FISH_ID's of the currently selected log lines(s) to delete
-      delete <- fish_data()[input$fish_table_rows_selected, ]$FISH_ID
+      delete <- fish_data()[input$fish_table_rows_selected, ]$fish_id
       ### If there is at least one currently selected log line, delete it
       if (length(delete) > 0) {
         ### Placeholder string (a vector of '?') the length of the FISH_ID's to delete
-        placeholders <- paste(rep("?", length(delete)), collapse = ",")
-        ### Execture query to delete those rows from the database
+        placeholders <- paste0("$", 1:length(delete), collapse = ", ")
+        ### Execute query to delete those rows from the database
         dbExecute(pool,
-                  paste("DELETE FROM FISH_LOG WHERE FISH_ID IN (", placeholders, ")"),
+                  paste0("DELETE FROM FISH_LOG WHERE FISH_ID IN (", placeholders, ")"),
                   params = as.list(delete))
         ### Activate refresh trigger to update the reactive containing the data to
         ### display in the Fish Log UI
@@ -316,18 +327,18 @@ fishLogServer <- function(id, pool, logged_in) {
         showNotification("You can only edit one log line at a time", type = "error")
       } else {
         ### Capture FISH_ID of the log line to edit
-        fish_id <- fish_data()[input$fish_table_rows_selected,]$FISH_ID
+        fish_id <- fish_data()[input$fish_table_rows_selected,]$fish_id
         ### Capture the row with the FISH_ID to be updated
         log_line <- dbGetQuery(pool,
-                               "SELECT DATE_FORMAT(CATCH_DATE, '%Y-%m-%d') as CATCH_DATE,
-                               TIME_FORMAT(CATCH_TIME, '%H:%i:%s') as CATCH_TIME,
+                               "SELECT TO_CHAR(CATCH_DATE, 'YYYY-MM-DD') as CATCH_DATE,
+                               TO_CHAR(CATCH_TIME, 'HH24:MI:SS') as CATCH_TIME,
                                CATCH_WATER, CATCH_STATE, WEATHER, SPECIES,
-                               APPROX_LENGTH, APPROX_WEIGHT, PRESENTATION,
-                               FLY_PATTERN, FLY_NAME, NOTES
+                               APPROX_LENGTH, LENGTH_UNITS, APPROX_WEIGHT, WEIGHT_UNITS,
+                               PRESENTATION, FLY_PATTERN, FLY_NAME, NOTES
                                FROM FISH_LOG
-                               WHERE FISH_ID = ?;",
+                               WHERE FISH_ID = $1;",
                                params = list(fish_id)
-                               )[1,]
+        )[1,]
         ### Convert log_line to a character vector
         log_line <- as.character(log_line)
         ### Combine water name and state together so that it has the form 'water name, state'
@@ -337,8 +348,6 @@ fishLogServer <- function(id, pool, logged_in) {
         log_line <- log_line[-4]
         ### UI form for editing the log line. Set initially selected values to the
         ### values pulled from the database for that log line
-        print(log_line[1])
-        print(log_line[2])
         showModal(modalDialog(
           title = "Update log line",
           size = "l",
@@ -356,17 +365,39 @@ fishLogServer <- function(id, pool, logged_in) {
                       choices = c("Choose a species" = "", species$fish_name),
                       selectize = TRUE,
                       selected = log_line[5]),
-          numericInput(NS(id, "approx_length"), "Approximate length (inches):", value = log_line[6]),
-          numericInput(NS(id, "approx_weight"), "Approximate weight (lbs):", value = log_line[7]),
+          fluidRow(
+            column(6,
+                   numericInput(NS(id, "approx_length"), "Approximate length:", value = log_line[6])
+            ),
+            column(6,
+                   selectInput(NS(id, "length_units"), "Units",
+                               choices = length_units,
+                               selected = log_line[7],
+                               selectize = TRUE
+                   )
+            )
+          ),
+          fluidRow(
+            column(6,
+                   numericInput(NS(id, "approx_weight"), "Approximate weight:", value = log_line[8])
+            ),
+            column(6,
+                   selectInput(NS(id, "weight_units"), "Units",
+                               choices = weight_units,
+                               selected = log_line[9],
+                               selectize = TRUE
+                   )
+            )
+          ),
           selectInput(NS(id, "presentation"), label =  "Presentation",
                       choices = c("Choose a fly" = "", presentations),
                       selectize = TRUE,
-                      selected = log_line[8]),
+                      selected = log_line[10]),
           selectInput(NS(id, "pattern"), label = "Fly pattern",
                       choices = c("Choose a pattern" = "", patterns),
                       selectize = TRUE,
-                      selected = log_line[9]),
-          textInput(NS(id, "fly_name"), "Fly name", value = log_line[10]),
+                      selected = log_line[11]),
+          textInput(NS(id, "fly_name"), "Fly name", value = log_line[12]),
           fileInput(NS(id, "fish_photo"), "Upload Photo (optional)",
                     accept = c('.jpg', '.jpeg', '.png', '.heic', '.heif', '.webp'),
                     width = "100%"),
@@ -393,12 +424,12 @@ fishLogServer <- function(id, pool, logged_in) {
         showNotification("Species is required", type = "error")
       } else {
         ### Capture FISH_ID of the log line to be updated
-        fish_id <- fish_data()[input$fish_table_rows_selected,]$FISH_ID
+        fish_id <- fish_data()[input$fish_table_rows_selected,]$fish_id
         ### Capture the photo path that was previously in the database for this
         ### log line (if any)
         old_photo_data <- dbGetQuery(pool,
                                      "SELECT PHOTO_FILENAME, PHOTO_DATA FROM FISH_LOG
-                                   WHERE FISH_ID = ?;",
+                                   WHERE FISH_ID = $1;",
                                      params = list(fish_id)
         )
         ### Capture the USER_ID of the currenly logged in user
@@ -410,23 +441,9 @@ fishLogServer <- function(id, pool, logged_in) {
         catch_water <- split_catch_water[1]
         catch_state <- split_catch_water[2]
 
-        # ### If there was no photo path in the database already, and the user did
-        # ### not update the photo path, keep new photo path and the old one (nothing)
-        # if (!is.na(old_photo_path) & is.null(input$fish_photo)) {
-        #   photo_path <- old_photo_path
-        # ### If old photo path is not NA but the new photopath is null, change
-        # ### photo path to NA to be compatible with inserting into the database
-        # } else if (is.null(input$fish_photo)) {
-        #   photo_path <- NA
-        # ### If old photo path is not NA and the new photo path is not null, use
-        # ### the new photo path
-        # } else {
-        #   photo_path <- input$fish_photo$datapath[1]
-        # }
-
         ### Extract photo file name and photo data to insert into database if available
-        photo_filename <- old_photo_data$PHOTO_FILENAME
-        photo_data <- old_photo_data$PHOTO_DATA
+        photo_filename <- old_photo_data$photo_filename
+        photo_data <- old_photo_data$photo_data
         if (!is.null(input$fish_photo)) {
           # Read and encode photo
           file_content <- readBin(input$fish_photo$datapath, "raw",
@@ -434,15 +451,15 @@ fishLogServer <- function(id, pool, logged_in) {
           photo_data <- base64enc::base64encode(file_content)
           photo_filename <- input$fish_photo$name
         }
-
+        print(fish_id)
         ### Update the row corresponding to this log line in the database
         dbExecute(pool,
                 "UPDATE FISH_LOG
-                SET CATCH_DATE = ?, CATCH_TIME = ?, CATCH_WATER = ?, CATCH_STATE = ?,
-                WEATHER = ?, SPECIES = ?, APPROX_LENGTH = ?, APPROX_WEIGHT = ?,
-                PRESENTATION = ?, FLY_PATTERN = ?, FLY_NAME = ?, PHOTO_FILENAME = ?,
-                PHOTO_DATA = ?, NOTES = ?
-                WHERE FISH_ID = ?;",
+                SET CATCH_DATE = $1, CATCH_TIME = $2, CATCH_WATER = $3, CATCH_STATE = $4,
+                WEATHER = $5, SPECIES = $6, APPROX_LENGTH = $7, LENGTH_UNITS = $8, APPROX_WEIGHT = $9,
+                WEIGHT_UNITS = $10, PRESENTATION = $11, FLY_PATTERN = $12, FLY_NAME = $13, PHOTO_FILENAME = $14,
+                PHOTO_DATA = $15, NOTES = $16
+                WHERE FISH_ID = $17;",
                   params = list(
                     input$catch_date,
                     input$catch_time,
@@ -451,7 +468,9 @@ fishLogServer <- function(id, pool, logged_in) {
                     input$weather_conditions,
                     input$species,
                     input$approx_length,
+                    input$length_units,
                     input$approx_weight,
+                    input$weight_units,
                     input$presentation,
                     input$pattern,
                     input$fly_name,

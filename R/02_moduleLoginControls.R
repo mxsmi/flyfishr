@@ -130,8 +130,8 @@ loginControlsServer <- function(id, pool) {
         ### Update password in the database
         dbExecute(pool,
            "UPDATE ACCOUNT_INFO
-           SET PASSWORD = ?
-           WHERE RESET_TOKEN = ?;",
+           SET PASSWORD = $1
+           WHERE RESET_TOKEN = $2;",
            params = list(hashed_pw, rt))
         ### Show notification saying password was updated
         showNotification("Password updated!", type = "message")
@@ -174,7 +174,7 @@ loginControlsServer <- function(id, pool) {
         ### Capture user id entered
         user_id <- dbGetQuery(pool,
                               "SELECT USER_ID FROM ACCOUNT_INFO
-                              WHERE USERNAME = ?;",
+                              WHERE USERNAME = $1;",
                               params = list(username)
                               )[1,1]
         ### Update logged_in() reactive with user id and logged in status
@@ -246,17 +246,8 @@ loginControlsServer <- function(id, pool) {
             hashed_pw <- bcrypt::hashpw(new_password1, salt = gensalt())
             ### Insert account information into the database
             dbExecute(pool,
-                      "INSERT INTO ACCOUNT_INFO
-                      (USERNAME, PASSWORD, EMAIL, DATE_CREATED, ACCESS)
-                      VALUES (?, ?, ?, ?, ?);",
-                      params = list(
-                        new_username,
-                        hashed_pw,
-                        new_email,
-                        as.character(Sys.Date()),
-                        'user'
-                      )
-            )
+                      "INSERT INTO ACCOUNT_INFO (USERNAME, PASSWORD, EMAIL) VALUES ($1, $2, $3)",
+                      params = list(new_username, hashed_pw, new_email))
             ### Show notification that the account was created
             showNotification("Account created! You can now login", type = "message")
             ### Remove modal
@@ -280,9 +271,9 @@ loginControlsServer <- function(id, pool) {
                               "SELECT PASSWORD FROM ACCOUNT_INFO;")[,1])
       ### Fetch the hash for the password
       hash <- as.character(dbGetQuery(pool,
-                                           "SELECT PASSWORD FROM ACCOUNT_INFO
-                                           WHERE USERNAME = ?;",
-                                           params = list(username)))
+  "SELECT PASSWORD FROM ACCOUNT_INFO
+  WHERE USERNAME = $1;",
+  params = list(username)))
       ### Set logical authentication status values for username and password
       username_auth <- FALSE
       password_auth <- FALSE
@@ -335,13 +326,13 @@ loginControlsServer <- function(id, pool) {
       ### Delete data from FISH_LOG table for that user id
       dbExecute(pool,
                 "DELETE FROM FISH_LOG
-                WHERE USER_ID = ?;",
+                WHERE USER_ID = $1;",
                 params = list(user_id)
                 )
       ### Delete data from ACCOUNT_INFO table for that user id
       dbExecute(pool,
                 "DELETE FROM ACCOUNT_INFO
-                WHERE USER_ID = ?;",
+                WHERE USER_ID = $1;",
                 params = list(user_id)
                 )
       ### Log them out of the app

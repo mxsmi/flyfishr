@@ -23,16 +23,16 @@ flyfishrApp <- function(...) {
   library(DT)
   library(bcrypt)
   library(pool)
-  library(RMariaDB)
+  library(RPostgres)
   ### Set theme
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
   ### Set pool of database connections
-  pool <- dbPool(MariaDB(),
-                    host = Sys.getenv("DB_HOST"),
-                    port = Sys.getenv("DB_PORT"),
-                    user = Sys.getenv("DB_USER"),
-                    password = Sys.getenv("DB_PASSWORD"),
-                    dbname = Sys.getenv("DB_NAME")
+  pool <- dbPool(RPostgres::Postgres(),
+                 host = "db.wdzhpcsyceshojxfjxhj.supabase.co",
+                 port = 5432,
+                 dbname = "postgres",
+                 user = "postgres",
+                 password = "7ymazg5r725zRCEX"
   )
 
   ui <- function(request) {
