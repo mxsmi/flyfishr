@@ -38,7 +38,7 @@ flyfishrApp <- function(...) {
                  minSize = 1,
                  maxSize = 15,
                  idleTimeout = 3600000,
-                 validationInterval = 3600
+                 validationInterval = 0
   )
 
   ui <- function(request) {
