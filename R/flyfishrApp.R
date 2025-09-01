@@ -34,7 +34,11 @@ flyfishrApp <- function(...) {
                  user = Sys.getenv("SUPABASE_DB_USER"),
                  password = Sys.getenv("SUPABASE_PW"),
                  sslmode = Sys.getenv("SUPABASE_DB_SSL"),
-                 options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE"))
+                 options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
+                 minSize = 1,
+                 maxSize = 15,
+                 idleTimeout = 3600000,
+                 validationInterval = 3600
   )
 
   ui <- function(request) {
