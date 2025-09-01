@@ -28,11 +28,11 @@ flyfishrApp <- function(...) {
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
   ### Set pool of database connections
   pool <- dbPool(RPostgres::Postgres(),
-                 host = "db.wdzhpcsyceshojxfjxhj.supabase.co",
-                 port = 5432,
-                 dbname = "postgres",
-                 user = "postgres",
-                 password = "7ymazg5r725zRCEX"
+                 host = Sys.getenv("SUPABASE_DB_HOST"),
+                 port = Sys.getenv("SUPABASE_DB_PORT"),
+                 dbname = Sys.getenv("SUPABASE_DB_NAME"),
+                 user = Sys.getenv("SUPABASE_DB_USER"),
+                 password = Sys.getenv("SUPABASE_PW")
   )
 
   ui <- function(request) {
