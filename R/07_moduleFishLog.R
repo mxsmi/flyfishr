@@ -255,8 +255,8 @@ fishLogServer <- function(id, pool, logged_in) {
         }
 
         # Get a dedicated connection for the insert
-        conn1 <- poolCheckout(pool)
-        query_result <- dbGetQuery(conn1,
+        # conn1 <- poolCheckout(pool)
+        query_result <- dbGetQuery(pool,
         "INSERT INTO FISH_LOG
         (USER_ID, CATCH_DATE, CATCH_TIME, CATCH_WATER,
         CATCH_STATE, WEATHER, SPECIES, APPROX_LENGTH, LENGTH_UNITS, APPROX_WEIGHT,
@@ -274,16 +274,16 @@ fishLogServer <- function(id, pool, logged_in) {
         new_fish_id <- as.integer(query_result$fish_id[1])
 
         # Return the first connection immediately
-        poolReturn(conn1)
+        # poolReturn(conn1)
 
         # Create the photo HTML
         photo_html <- create_photo_html(photo_data, photo_filename, new_fish_id)
 
         # Get a fresh connection for the update
-        conn2 <- poolCheckout(pool)
-        dbExecute(conn2, "UPDATE FISH_LOG SET PHOTO_HTML = $1 WHERE FISH_ID = $2;",
+        # conn2 <- poolCheckout(pool)
+        dbExecute(pool, "UPDATE FISH_LOG SET PHOTO_HTML = $1 WHERE FISH_ID = $2;",
                   params = list(photo_html, new_fish_id))
-        poolReturn(conn2)
+        # poolReturn(conn2)
 
         ### Activate the refresh trigger to update the reactive fish_data() containing
         ### the rows to be displayed in the Fish_Log UI
