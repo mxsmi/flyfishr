@@ -36,10 +36,17 @@ flyfishrApp <- function(...) {
                  sslmode = Sys.getenv("SUPABASE_DB_SSL"),
                  options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
                  minSize = 1,
-                 maxSize = 15,
-                 idleTimeout = 3600000,
-                 validationInterval = 0
+                 maxSize = 2,
+                 idleTimeout = 6000,
+                 validationInterval = 300
   )
+
+  observe({
+    invalidateLater(30000)  # Check every 30 seconds
+    if (!is.null(pool) && !pool$valid) {
+      cat("POOL CLOSED at:", Sys.time(), "\n")
+    }
+  })
 
   ui <- function(request) {
     fluidPage(
