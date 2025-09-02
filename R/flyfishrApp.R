@@ -36,9 +36,9 @@ flyfishrApp <- function(...) {
                  sslmode = Sys.getenv("SUPABASE_DB_SSL"),
                  options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
                  minSize = 1,
-                 maxSize = 2,
-                 idleTimeout = 6000,
-                 validationInterval = 300
+                 maxSize = 15,
+                 idleTimeout = 60,
+                 validationInterval = 75
   )
 
   observe({
