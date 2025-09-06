@@ -2,6 +2,12 @@
 ## flyfishr app
 
 createSiteMap <- function(site) {
+
+  ## Load libraries
+  library(dataRetrieval)
+  library(leaflet)
+  library(dplyr)
+
   ### Get site info
   site_info <- readNWISsite(siteNumbers = site)
 

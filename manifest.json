@@ -3522,22 +3522,22 @@
       "checksum": "4e0d54e522a4836fc5c55ba0a91a22f5"
     },
     "R/createSiteMap.R": {
-      "checksum": "b7b8273230cfb956d038408c22563c40"
+      "checksum": "e791b8fccfe323d973a5492a2381daef"
     },
     "R/dischargeDataAvailable.R": {
-      "checksum": "e7f7beeeb3927f184ba95f5a9326bd1e"
+      "checksum": "f147234076538c0140a2a7abb5c10f70"
     },
     "R/fishingReportPrompt.R": {
       "checksum": "1dffaff96eb05ee990cb1aa3bf76930e"
     },
     "R/flyfishrApp.R": {
-      "checksum": "493c64ddd341cc20645403993aca3a72"
+      "checksum": "56f3f486308f02b45680205ade6ec7e7"
     },
     "R/passwordReset.R": {
       "checksum": "a8ac6df71bcf7a4e4fc58732fee76b48"
     },
     "R/plotDischarge.R": {
-      "checksum": "b77d40da88bc3bf12d9de6ce178f7ab8"
+      "checksum": "96faf7b01a83c5b9f51cba5772b86980"
     },
     "R/plotWaterTemp.R": {
       "checksum": "c01ee57d0098e8db2398fdb5c545a096"
@@ -3554,11 +3554,20 @@
     "tests/testthat.R": {
       "checksum": "e4d2a25d927e0cd689e14fccece48812"
     },
+    "tests/testthat/test-01_moduleInputControls.R": {
+      "checksum": "225e3812b897786befc574f805c96dc2"
+    },
     "tests/testthat/test-createSiteMap.R": {
       "checksum": "a109ef788b9754092338a0105d80fff4"
     },
     "tests/testthat/test-dischargeDataAvailable.R": {
-      "checksum": "b7a0755ef8d0d7f74571afb3b172d332"
+      "checksum": "17aeb41913918539957f009f7e8851d9"
+    },
+    "tests/testthat/test-plotDischarge.R": {
+      "checksum": "38f079865b6badde709465353281f6e4"
+    },
+    "tests/testthat/test-plotWaterTemp.R": {
+      "checksum": "fb01ed5a86789bf3454185d36b60fa22"
     }
   },
   "users": null

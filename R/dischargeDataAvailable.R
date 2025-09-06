@@ -2,9 +2,18 @@
 ## then filters it to only streams/springs (ST/SP) and only sites that have
 ## instantaneous flow data (a Flow_Inst column after applying renameNWISColumns)
 
-library(dataRetrieval)
-
 dischargeDataAvailable <- function(state) {
+
+  ## Load libraries
+  library(dataRetrieval)
+  library(dplyr)
+  library(shiny)
+
+  ### Validate data first
+  shiny::validate(
+    need(!is.na(stateCd), "Missing state input"),
+    need(state %in% stateCd$STUSAB, "Not a valid state input"),
+  )
 
   ### Fetch sites that have Instantaneous discharge data for the selected state
   data <- whatNWISdata(

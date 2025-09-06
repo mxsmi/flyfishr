@@ -36,14 +36,15 @@ flyfishrApp <- function(...) {
                  sslmode = Sys.getenv("SUPABASE_DB_SSL"),
                  options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
                  minSize = 1,
-                 maxSize = 15,
-                 idleTimeout = 60,
-                 validationInterval = 75
+                 maxSize = 10,
+                 idleTimeout = 1800,
+                 validationInterval = 300
   )
 
   observe({
     invalidateLater(30000)  # Check every 30 seconds
     if (!is.null(pool) && !pool$valid) {
+      DBI::dbListConnections(RPostgres::Postgres())
       cat("POOL CLOSED at:", Sys.time(), "\n")
     }
   })
@@ -115,6 +116,7 @@ flyfishrApp <- function(...) {
 
     ### Clean up pool when session ends
     onStop(function() {
+      DBI::dbListConnections(RPostgres::Postgres())
       try(poolClose(pool), silent = TRUE)
     })
   }

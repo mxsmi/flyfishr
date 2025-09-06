@@ -2,6 +2,12 @@
 
 plotDischarge <- function(site_no) {
 
+  ## Load libraries
+  library(dataRetrieval)
+  library(lubridate)
+  library(ggplot2)
+  library(shiny)
+
   ### Parameters for readNWISuv (the function that gets the data for a specific site)
   siteNo <- site_no
   pCode <- "00060"
