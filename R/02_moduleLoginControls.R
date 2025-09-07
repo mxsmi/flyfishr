@@ -139,7 +139,7 @@ loginControlsServer <- function(id, pool) {
         removeModal()
       } else {
         ### If the reset token entered does not match the reset token in the
-        ### database, show notification saying that the reset toke in incorrect
+        ### database, show notification saying that the reset token in incorrect
         showNotification("Incorrect token entered", type = "error")
       }
     })
@@ -226,19 +226,21 @@ loginControlsServer <- function(id, pool) {
         ### update the database
         if (new_password1 == new_password2) {
           ### Fetch all usernames from the database
-          usernames <- as.character(dbGetQuery(pool,
-                                               "SELECT USERNAME FROM ACCOUNT_INFO;")[,1])
+          username_exists <- dbGetQuery(pool,
+            "SELECT 1 FROM ACCOUNT_INFO WHERE USERNAME = $1 LIMIT 1;",
+            params = list(new_username))
           ### Fetch all emails from the database
-          emails <- as.character(dbGetQuery(pool,
-                                            "SELECT EMAIL FROM ACCOUNT_INFO;")[,1])
+          email_exists <- dbGetQuery(pool,
+            "SELECT 1 FROM ACCOUNT_INFO WHERE EMAIL = $1 LIMIT 1;",
+            params = list(new_email))
           ### If the username entered matches the username for an existing account,
           ### show notification that the username is already taken
-          if (new_username %in% usernames) {
+          if (nrow(username_exists) > 0) {
             showNotification("That username is already taken. Please choose another one",
                              type = "error")
             ### If the email entered matches the email for an existing account,
             ### show notification that the email is already associated with an account
-          } else if (new_email %in% emails) {
+          } else if (nrow(email_exists) > 0) {
             showNotification("There is already an account for that email", type = "error")
             ### If the username and email entered are available, create the new account
           } else {
@@ -263,32 +265,35 @@ loginControlsServer <- function(id, pool) {
 
     ### Authentication function
     authenticate_user <- function(username, password) {
-      ### Fetch all usernames from the database
-      usernames <- as.character(dbGetQuery(pool,
-                              "SELECT USERNAME FROM ACCOUNT_INFO;")[,1])
-      ### Fetch all passwords from the database
-      passwords <- as.character(dbGetQuery(pool,
-                              "SELECT PASSWORD FROM ACCOUNT_INFO;")[,1])
-      ### Fetch the hash for the password
-      hash <- as.character(dbGetQuery(pool,
-  "SELECT PASSWORD FROM ACCOUNT_INFO
-  WHERE USERNAME = $1;",
-  params = list(username)))
-      ### Set logical authentication status values for username and password
-      username_auth <- FALSE
-      password_auth <- FALSE
-      ### Check if username is in the database and set authentication status to TRUE
-      ### if it is
-      if (username %in% usernames) {
-        username_auth = TRUE
+      ### Query existence of the username in the database
+      username_exists <- dbGetQuery(pool,
+        "SELECT 1 FROM ACCOUNT_INFO WHERE USERNAME = $1;",
+        params = list(username))
+
+      ### If username does not exist, not authenticated return FALSE
+      if (nrow(username_exists) == 0) {
+        return(FALSE)
       }
+
+      ### Fetch the hashed password for the inputted username if it exists
+      hashed_password <- dbGetQuery(pool,
+        "SELECT PASSWORD FROM ACCOUNT_INFO WHERE USERNAME = $1;",
+        params = list(username))
+      hashed_password <- as.character(hashed_password[1,1])
+      
+      ### Set logical authentication status values for username and password
+      # username_auth <- FALSE
+      # password_auth <- FALSE
+
       ### Check if the password entered matches the hash fetched from the database
       ### and set authentication status to TRUE if it does
-      if (checkpw(password, hash)) {
-        password_auth = TRUE
-      }
-      ### Return authentication status
-      return(username_auth && password_auth)
+      # if (checkpw(password, hashed_password)) {
+      #   password_auth = TRUE
+      # }
+      # ### Return authentication status
+      # return(username_auth && password_auth)
+
+      return(checkpw(password, hashed_password))
     }
 
     ### Display login status in the UI
