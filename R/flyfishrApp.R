@@ -3,6 +3,21 @@
 ## view a map, current water levels, get an AI generated fishing report, and
 ## maintain a Fish Log of their catches.
 
+  ### Set pool of database connections
+  pool <- dbPool(RPostgres::Postgres(),
+                 host = Sys.getenv("SUPABASE_DB_HOST"),
+                 port = Sys.getenv("SUPABASE_DB_PORT"),
+                 dbname = Sys.getenv("SUPABASE_DB_NAME"),
+                 user = Sys.getenv("SUPABASE_DB_USER"),
+                 password = Sys.getenv("SUPABASE_PW"),
+                 sslmode = Sys.getenv("SUPABASE_DB_SSL"),
+                 options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
+                 minSize = 1,
+                 maxSize = 10,
+                 idleTimeout = 1800,
+                 validationInterval = 300
+  )
+
 ### Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
 
@@ -27,19 +42,19 @@ flyfishrApp <- function(...) {
   ### Set theme
   base_theme <- bslib::bs_theme(bootswatch = "pulse")
   ### Set pool of database connections
-  pool <- dbPool(RPostgres::Postgres(),
-                 host = Sys.getenv("SUPABASE_DB_HOST"),
-                 port = Sys.getenv("SUPABASE_DB_PORT"),
-                 dbname = Sys.getenv("SUPABASE_DB_NAME"),
-                 user = Sys.getenv("SUPABASE_DB_USER"),
-                 password = Sys.getenv("SUPABASE_PW"),
-                 sslmode = Sys.getenv("SUPABASE_DB_SSL"),
-                 options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
-                 minSize = 1,
-                 maxSize = 10,
-                 idleTimeout = 1800,
-                 validationInterval = 300
-  )
+  # pool <- dbPool(RPostgres::Postgres(),
+  #                host = Sys.getenv("SUPABASE_DB_HOST"),
+  #                port = Sys.getenv("SUPABASE_DB_PORT"),
+  #                dbname = Sys.getenv("SUPABASE_DB_NAME"),
+  #                user = Sys.getenv("SUPABASE_DB_USER"),
+  #                password = Sys.getenv("SUPABASE_PW"),
+  #                sslmode = Sys.getenv("SUPABASE_DB_SSL"),
+  #                options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
+  #                minSize = 1,
+  #                maxSize = 10,
+  #                idleTimeout = 1800,
+  #                validationInterval = 300
+  # )
 
   observe({
     invalidateLater(30000)  # Check every 30 seconds

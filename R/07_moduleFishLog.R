@@ -452,7 +452,7 @@ fishLogServer <- function(id, pool, logged_in) {
           photo_filename <- input$fish_photo$name
         }
 
-        ## If input$catch_time is "" convert it to NULL for inserting into the database
+        ## If input$catch_time is "" convert it to NA for inserting into the database
         catch_time = input$catch_time
         if (input$catch_time == "") {
           catch_time = NA
