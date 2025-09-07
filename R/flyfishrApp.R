@@ -149,8 +149,10 @@ flyfishrApp <- function(...) {
 
     ### Clean up pool when session ends
     onStop(function() {
-      try(poolClose(pool), silent = TRUE)
-    })
+        if (!is.null(pool) && pool$valid) {
+          try(poolClose(pool), silent = TRUE)
+        }  
+      })
   }
 
   shinyApp(ui, server, enableBookmarking = "url")
