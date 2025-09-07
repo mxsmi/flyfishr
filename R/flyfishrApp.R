@@ -37,6 +37,13 @@ pool <- dbPool(RPostgres::Postgres(),
                validationInterval = 300
 )
 
+### Clean up pool when session ends
+onStop(function() {
+    if (!is.null(pool) && pool$valid) {
+      try(poolClose(pool), silent = TRUE)
+    }  
+})
+
 ### Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
 
@@ -76,7 +83,6 @@ flyfishrApp <- function(...) {
   # )
 
   observe({
-    invalidateLater(30000)  # Check every 30 seconds
     if (!is.null(pool) && !pool$valid) {
       cat("POOL CLOSED at:", Sys.time(), "\n")
     }
@@ -146,13 +152,6 @@ flyfishrApp <- function(...) {
 
     ### Update the query string
     onBookmarked(updateQueryString)
-
-    ### Clean up pool when session ends
-    onStop(function() {
-        if (!is.null(pool) && pool$valid) {
-          try(poolClose(pool), silent = TRUE)
-        }  
-      })
   }
 
   shinyApp(ui, server, enableBookmarking = "url")
