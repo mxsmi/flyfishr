@@ -3,20 +3,39 @@
 ## view a map, current water levels, get an AI generated fishing report, and
 ## maintain a Fish Log of their catches.
 
-  ### Set pool of database connections
-  pool <- dbPool(RPostgres::Postgres(),
-                 host = Sys.getenv("SUPABASE_DB_HOST"),
-                 port = Sys.getenv("SUPABASE_DB_PORT"),
-                 dbname = Sys.getenv("SUPABASE_DB_NAME"),
-                 user = Sys.getenv("SUPABASE_DB_USER"),
-                 password = Sys.getenv("SUPABASE_PW"),
-                 sslmode = Sys.getenv("SUPABASE_DB_SSL"),
-                 options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
-                 minSize = 1,
-                 maxSize = 10,
-                 idleTimeout = 1800,
-                 validationInterval = 300
-  )
+  ### Load required libraries
+  library(shiny)
+  library(dataRetrieval)
+  library(ggplot2)
+  library(waiter)
+  library(lubridate)
+  library(dplyr)
+  library(stringr)
+  library(markdown)
+  library(chatLLM)
+  library(leaflet)
+  library(jsonlite)
+  library(blastula)
+  library(shinyTime)
+  library(DT)
+  library(bcrypt)
+  library(pool)
+  library(RPostgres)
+
+### Set pool of database connections
+pool <- dbPool(RPostgres::Postgres(),
+               host = Sys.getenv("SUPABASE_DB_HOST"),
+               port = Sys.getenv("SUPABASE_DB_PORT"),
+               dbname = Sys.getenv("SUPABASE_DB_NAME"),
+               user = Sys.getenv("SUPABASE_DB_USER"),
+               password = Sys.getenv("SUPABASE_PW"),
+               sslmode = Sys.getenv("SUPABASE_DB_SSL"),
+               options = paste0("-c pool_mode=", Sys.getenv("POOL_MODE")),
+               minSize = 1,
+               maxSize = 10,
+               idleTimeout = 1800,
+               validationInterval = 300
+)
 
 ### Define 'flyfishrApp' function
 flyfishrApp <- function(...) {
