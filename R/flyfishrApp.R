@@ -44,7 +44,6 @@ flyfishrApp <- function(...) {
   observe({
     invalidateLater(30000)  # Check every 30 seconds
     if (!is.null(pool) && !pool$valid) {
-      DBI::dbListConnections(RPostgres::Postgres())
       cat("POOL CLOSED at:", Sys.time(), "\n")
     }
   })
@@ -116,7 +115,6 @@ flyfishrApp <- function(...) {
 
     ### Clean up pool when session ends
     onStop(function() {
-      DBI::dbListConnections(RPostgres::Postgres())
       try(poolClose(pool), silent = TRUE)
     })
   }

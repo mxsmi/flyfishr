@@ -451,7 +451,13 @@ fishLogServer <- function(id, pool, logged_in) {
           photo_data <- base64enc::base64encode(file_content)
           photo_filename <- input$fish_photo$name
         }
-        print(fish_id)
+
+        ## If input$catch_time is "" convert it to NULL for inserting into the database
+        catch_time = input$catch_time
+        if (input$catch_time == "") {
+          catch_time = NA
+        }
+        # print(fish_id)
         ### Update the row corresponding to this log line in the database
         dbExecute(pool,
                 "UPDATE FISH_LOG
@@ -462,7 +468,7 @@ fishLogServer <- function(id, pool, logged_in) {
                 WHERE FISH_ID = $17;",
                   params = list(
                     input$catch_date,
-                    input$catch_time,
+                    catch_time,
                     catch_water,
                     catch_state,
                     input$weather_conditions,
